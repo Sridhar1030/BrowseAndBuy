@@ -38,7 +38,7 @@ function Home() {
 
         <div class="f-box">
             <img src="https://c8.alamy.com/comp/2B1G4KC/happy-jumping-caucasian-woman-with-shopping-bagsbig-sale-conceptisolated-on-white-backgroundcartoon-vector-illustration-2B1G4KC.jpg" alt="" />
-            <h6>big sell</h6>
+            <h6>Sell</h6>
         </div>
 
         <div class="f-box">
