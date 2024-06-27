@@ -8,7 +8,7 @@ function Navbar() {
             <div className="flex justify-start space-x-11 h-20">
                 <div className="flex justify-center align-middle">
                     <button>
-                        <Link to="/" className="text-2xl flex justify-center align-middle">
+                        <Link to="/home" className="text-2xl flex justify-center align-middle">
                             <img className='size-10' src="https://cdn-icons-png.flaticon.com/512/9752/9752709.png" alt="" />
                             Browse And Buy
                         </Link>

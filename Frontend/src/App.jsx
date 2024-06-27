@@ -10,6 +10,8 @@ import Account from './components/Account/Account';
 import Book from './components/Purchase/Book/Book'
 import Instruments from './components/Purchase/Instruments/Instruments';
 import Form from './components/Sell/Form/Form';
+import Login from './components/LogSign/Login';
+import Signup from './components/LogSign/Signup';
 
 function App() {
 
@@ -17,7 +19,10 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          
+          <Route path="/home" element={<Home />} />
           <Route path="/purchase" element={<Purchase />} />
           <Route path="/sell" element={<Sell/>} />
           <Route path="/orders" element={<Order/>} />
