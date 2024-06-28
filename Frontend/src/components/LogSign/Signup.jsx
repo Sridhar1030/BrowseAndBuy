@@ -87,7 +87,7 @@ function Signup() {
                 </button>
                 {/* </Link> */}
                 Already have an account?
-                <a href="/login" className="text-blue-500 hover:underline flex">
+                <a href="/" className="text-blue-500 hover:underline flex">
                     Login
                 </a>
             </div>

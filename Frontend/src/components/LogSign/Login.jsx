@@ -1,7 +1,35 @@
-// src/LoginPage.js
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+
+function Login ()  {
+    const navigate = useNavigate();
+    const [username, setusername] = useState('');
+    const [email, setemail] = useState('');
+    const [password, setpassword] = useState('');
+
+    const login = async () => {
+        console.log({ username, password, email });
+        const url = "http://localhost:3000/login";
+        const data = { username, password, email };
+        
+        try {
+            const res = await axios.post(url, data);
+            console.log(res.data);
+            if (res.data.message) {
+                alert(res.data.message);
+                if(res.data.token){
+                    localStorage.setItem("token",res.data.token)
+                    navigate("/home")
+                }
+            }
+        } catch (err) {
+            console.log(err);
+            alert("server is in error");
+        }
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded shadow-md w-96">
@@ -13,7 +41,8 @@ const Login = () => {
                         </label>
                         <input
                             type="email"
-                            id="email"
+                            value={email}
+                            onChange={(e) => setemail(e.target.value)}
                             className="mt-1 p-2 w-full border rounded"
                             placeholder="Enter your email"
                         />
@@ -24,7 +53,8 @@ const Login = () => {
                         </label>
                         <input
                             type="text"
-                            id="username"
+                            value={username}
+                            onChange={(e) => setusername(e.target.value)}
                             className="mt-1 p-2 w-full border rounded"
                             placeholder="Enter username"
                         />
@@ -35,19 +65,21 @@ const Login = () => {
                         </label>
                         <input
                             type="password"
-                            id="password"
+                            value={password}
+                            onChange={(e) => setpassword(e.target.value)}
                             className="mt-1 p-2 w-full border rounded"
                             placeholder="Enter your password"
                         />
                     </div>
-                    <button
-                        type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
-                        Log In
-                    </button>
                 </form>
-                Dont have an account?
+                <button
+                    type="submit"
+                    onClick={login}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                    Log In
+                </button>
+                Don't have an account?
                 <a href="/signup" className="text-blue-500 hover:underline flex">
                     Register
                 </a>
