@@ -16,7 +16,7 @@ function Form() {
 
     return (
         <>
-            <div className="h-screen flex items-center justify-center bg-black">
+            <div className="h-screen flex items-center justify-center bg-gray-400">
                 <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
                     <div className="relative z-0 w-full mb-5 group ">
                         <input
