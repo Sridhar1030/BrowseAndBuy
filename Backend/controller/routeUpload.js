@@ -3,29 +3,33 @@ const router = express.Router();
 const cloudinary = require("../utils.js/cloudinary");
 const upload = require("../middleware/multer");
 
-router.post("/upload", upload.single("image"), function (req, res) {
-    if (!req.file) {
+router.post("/upload", upload.array("image", 3), async function (req, res) {
+    if (!req.files || req.files.length === 0) {
         return res.status(400).json({
             success: false,
-            message: "No file uploaded",
+            message: "No files uploaded",
         });
     }
-    
-    cloudinary.uploader.upload(req.file.path, function (err, result) {
-        if (err) {
-            console.log(err);
-            return res.status(500).json({
-                success: false,
-                message: "Error uploading to Cloudinary",
-            });
+
+    try {
+        const uploadResults = [];
+        for (const file of req.files) {
+            const result = await cloudinary.uploader.upload(file.path);
+            uploadResults.push(result);
         }
-        console.log("file uploaded successfully to cloudinary" , result)
+        console.log("Files uploaded successfully to Cloudinary", uploadResults);
         res.status(200).json({
             success: true,
             message: "Uploaded!",
-            data: result,
+            data: uploadResults,
         });
-    });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            message: "Error uploading to Cloudinary",
+        });
+    }
 });
 
 module.exports = router;
