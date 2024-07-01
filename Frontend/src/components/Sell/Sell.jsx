@@ -18,16 +18,26 @@ function Sell() {
 
   const handleImage = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    if (selectedFiles.length + images.length > 2) {
+    const validFiles = selectedFiles.filter(file => 
+      ['image/jpeg', 'image/png', 'image/svg+xml'].includes(file.type)
+    );
+
+    if (validFiles.length + images.length > 2) {
       alert("You can upload up to 2 images only");
       return;
     }
-    setImages((prevImages) => [...prevImages, ...selectedFiles]);
+
+    setImages((prevImages) => [...prevImages, ...validFiles]);
   };
 
-  const handleUploadClick = () => {
+  const handleUploadClick = async () => {
     if (!accepted) {
       alert("Please accept the rules before uploading");
+      return;
+    }
+
+    if (images.length === 0) {
+      alert("Please select images to upload");
       return;
     }
 
@@ -35,21 +45,23 @@ function Sell() {
     
     const formData = new FormData();
     images.forEach((image, index) => {
-      formData.append(`image${index}`, image);
+      formData.append(`image`, image); // Ensure backend expects this field name
     });
 
-    axios.post('http://localhost:3000/api/users/upload', formData)
-      .then((res) => {
-        console.log(res);
-        alert("Files have been uploaded successfully");
-      })
-      .catch((err) => {
-        console.error("Error uploading files:", err);
-        alert("An error occurred while uploading the files. Please try again.");
-      })
-      .finally(() => {
-        setUploading(false);
+    try {
+      const response = await axios.post('http://localhost:3000/api/users/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
+      console.log(response);
+      alert("Files have been uploaded successfully");
+    } catch (err) {
+      console.error("Error uploading files:", err);
+      alert("An error occurred while uploading the files. Please try again.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const removeImage = (index) => {
@@ -57,19 +69,20 @@ function Sell() {
   };
 
   return (
-    <div className='bg-gray-400 flex flex-col'>
-      <div><Navbar /></div>
-      <div className='flex justify-center items-center flex-col'>
+    <div className='bg-gray-400 flex flex-col min-h-screen'>
+      <Navbar />
+      <div className='flex flex-col items-center justify-center'>
         <Form />
 
         {!accepted && (
-          <div className="bg-red-500 text-white text-sm font-bold px-4 py-3 ">
+          <div className="bg-red-500 text-white text-sm font-bold px-4 py-3">
             <p>Please accept the rules before uploading</p>
           </div>
         )}
-        <div className="flex flex-col m-8 items-center justify-center w-[1000px] h-96">
+
+        <div className="flex flex-col items-center justify-center w-full h-96 m-8">
           <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-            <div className="flex flex-col items-center justify-center pt-5 pb-6 ">
+            <div className="flex flex-col items-center justify-center pt-5 pb-6">
               {images.length === 0 ? (
                 <>
                   <svg className="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
@@ -94,13 +107,15 @@ function Sell() {
           </label>
           <button 
             onClick={handleUploadClick} 
-            className={`text-white font-bold py-2 px-4 rounded-full m-3 self-end ${uploading ? 'bg-red-500' : 'bg-blue-500 hover:bg-blue-700'}`}>
-            Upload
+            className={`text-white font-bold py-2 px-4 rounded-full m-3 self-end ${uploading ? 'bg-red-500' : 'bg-blue-500 hover:bg-blue-700'}`}
+            disabled={uploading}
+          >
+            {uploading ? 'Uploading...' : 'Upload'}
           </button>
         </div>
-        {/* //RULES */}
+
         <div className='pl-10 mt-10'>
-          <Rule/>
+          <Rule />
           <button onClick={handleAcceptClick} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             I Accept
           </button>

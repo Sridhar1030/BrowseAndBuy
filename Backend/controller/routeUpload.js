@@ -14,7 +14,9 @@ router.post("/upload", upload.array("image", 3), async function (req, res) {
 	try {
 		const uploadResults = [];
 		for (const file of req.files) {
-			const result = await cloudinary.uploader.upload(file.path);
+			const result = await cloudinary.uploader.upload(file.path , {
+				folder: "SHT"
+			});
 			uploadResults.push(result);
 		}
 		console.log("Files uploaded successfully to Cloudinary", uploadResults);
@@ -31,25 +33,6 @@ router.post("/upload", upload.array("image", 3), async function (req, res) {
 		});
 	}
 });
-router.get("/images", async function (req, res) {
-	try {
-		// Fetch images metadata from Cloudinary (only URLs)
-		const { resources } = await cloudinary.search
-			.expression("folder:Home") // Adjust folder path as needed
-			.execute();
 
-		const imageUrls = resources.map((file) => file.name);
-
-		console.log("Fetched image URLs from Cloudinary:", imageUrls); // Added console log
-
-		res.status(200).json(imageUrls);
-	} catch (error) {
-		console.error("Error fetching images from Cloudinary", error);
-		res.status(500).json({
-			success: false,
-			message: "Error fetching images from Cloudinary",
-		});
-	}
-});
 
 module.exports = router;

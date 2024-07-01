@@ -28,12 +28,45 @@ app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
+// const sell = mongoose.model("sell",{
+//     name: String,
+//     price: Number,
+//     image: String,
+//     category: String,
+//     seller: String,
+//     semester: Number
+// })
+
+
+// app.post("/sell",(req,res)=>{
+//     //add dummy values in each
+//     const newSell = new sell({
+//         name: req.body.name,
+//         price: req.body.price,
+//         image: req.body.image,
+//         category: req.body.category,
+//         seller: req.body.seller,
+//         semester: req.body.semester
+//     });
+//     newSell.save()
+//     .then(()=>res.send({message:"saved success"}))
+//     .catch(()=>res.send({message:"saved failed"})); 
+//     // const {name,price,description,image,category,seller} = req.body;
+//     // const newSell = new sell({name,price,description,image,category,seller});
+//     // newSell.save()
+//     // .then(()=>res.send({message:"saved success"}))
+//     // .catch(()=>res.send({message:"saved failed"}));
+// })
+
+
 app.post("/signup", (req, res) => {
     const { username, email, password } = req.body;
     const newUser = new users({ username, email, password });
 
     newUser.save()
-        .then(() => res.send({ message: "saved success" }))
+        .then(() => res.send({ message: "saved success" }
+            
+        ))
         .catch(() => res.send({ message: "saved failed" }));
 });
 

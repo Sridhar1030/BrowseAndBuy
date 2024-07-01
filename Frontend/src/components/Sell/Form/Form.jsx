@@ -36,6 +36,8 @@ function Form() {
                         <option value="Labcoats">Labcoats</option>
                         <option value="PYQS">PYQS</option>
                         <option value="Graphics Instruments">Graphics Instruments</option>
+                        <option value="Stationary">Stationary</option>
+                        <option value="Others">Others</option>
                     </select>
                 </div>
                 <div className="mb-4">
