@@ -1,16 +1,29 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../Navbar/Navbar';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Form from './Form/Form';
 import Rule from './Rule';
 
-function Sell() {
+function ImageUpload() {
   const [accepted, setAccepted] = useState(false);
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [formData, setFormData] = useState(null); // State to hold form data
+
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state && location.state.formData) {
+      console.log('Form Data on ImageUpload:', location.state.formData);
+      setFormData(location.state.formData);
+    }
+  }, [location.state]);
+
+  const handleAdmin = () => {
+    console.log("Navigating to Admin Images with formData:", formData);
+    navigate('/AdminImages', { state: { formData: formData } });
+  }
 
   const handleAcceptClick = () => {
     setAccepted(true);
@@ -18,7 +31,7 @@ function Sell() {
 
   const handleImage = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    const validFiles = selectedFiles.filter(file => 
+    const validFiles = selectedFiles.filter(file =>
       ['image/jpeg', 'image/png', 'image/svg+xml'].includes(file.type)
     );
 
@@ -35,27 +48,42 @@ function Sell() {
       alert("Please accept the rules before uploading");
       return;
     }
-
+  
     if (images.length === 0) {
       alert("Please select images to upload");
       return;
     }
-
+  
     setUploading(true);
-    
-    const formData = new FormData();
+  
+    const formDataToUpdate = { ...formData }; // Make a copy of existing formData
+  
+    const formDataForUpload = new FormData();
     images.forEach((image, index) => {
-      formData.append(`image`, image); // Ensure backend expects this field name
+      formDataForUpload.append(`image`, image); // Ensure backend expects this field name
     });
-
+  
     try {
-      const response = await axios.post('http://localhost:3000/api/users/upload', formData, {
+      const response = await axios.post('http://localhost:3000/api/users/upload', formDataForUpload, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log(response);
+  
+      // Assuming response.data contains the uploaded image data
+      const uploadResults = response.data.data;
+      console.log("Files uploaded successfully to Cloudinary", uploadResults);
+  
+      // Update formDataToUpdate with public_ids
+      formDataToUpdate.public_ids = uploadResults.map(result => result.public_id);
+  
+      setFormData(formDataToUpdate); // Update state with updated form data
+  
+      // Logging updated form data
+      console.log("Updated FormData:", formDataToUpdate);
+  
       alert("Files have been uploaded successfully");
+  
     } catch (err) {
       console.error("Error uploading files:", err);
       alert("An error occurred while uploading the files. Please try again.");
@@ -72,8 +100,6 @@ function Sell() {
     <div className='bg-gray-400 flex flex-col min-h-screen'>
       <Navbar />
       <div className='flex flex-col items-center justify-center'>
-        <Form />
-
         {!accepted && (
           <div className="bg-red-500 text-white text-sm font-bold px-4 py-3">
             <p>Please accept the rules before uploading</p>
@@ -116,13 +142,18 @@ function Sell() {
 
         <div className='pl-10 mt-10'>
           <Rule />
-          <button onClick={handleAcceptClick} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            I Accept
-          </button>
+          <div className='gap-10 flex'>
+            <button onClick={handleAcceptClick} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              I Accept
+            </button>
+            <button className='mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' onClick={handleAdmin}>
+              ADMIN
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-export default Sell;
+export default ImageUpload;

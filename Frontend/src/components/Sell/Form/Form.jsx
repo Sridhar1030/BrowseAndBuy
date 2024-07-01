@@ -6,13 +6,19 @@ function Form() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const formDataObject = Object.fromEntries(formData.entries()); // Convert FormData to plain object
+        console.log('Form Data:', formDataObject);
         alert('Uploaded');
-        navigate('/sell');
+
+        // Navigate to ImageUpload and pass formDataObject as state
+        navigate('/form/ImageUpload', { state: { formData: formDataObject } });
     };
 
     return (
         <div className="h-screen flex items-center justify-center bg-gray-400 ">
-            <form className="max-w-md mx-auto p-4 bg-white rounded shadow-md w-[10000px]" onSubmit={handleSubmit}>
+            <form className="max-w-md mx-auto p-4 bg-white rounded shadow-md" onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label htmlFor="ItemName" className="block text-gray-700">Item Name</label>
                     <input
@@ -31,7 +37,7 @@ function Form() {
                         className="w-full px-3 py-2 border rounded"
                         required
                     >
-                        <option value="" disabled selected hidden>Select Item Type</option>
+                        <option value="" disabled defaultValue hidden>Select Item Type</option>
                         <option value="Engineering Books">Engineering Books</option>
                         <option value="Labcoats">Labcoats</option>
                         <option value="PYQS">PYQS</option>
@@ -72,24 +78,22 @@ function Form() {
                     />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="PhoneNumber" className="block text-gray-700">First Name</label>
+                    <label htmlFor="FirstName" className="block text-gray-700">First Name</label>
                     <input
-                        type="tel"
-                        name="PhoneNumber"
-                        id="PhoneNumber"
+                        type="text"
+                        name="FirstName"
+                        id="FirstName"
                         className="w-full px-3 py-2 border rounded"
-                        pattern="^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$"
                         required
                     />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="PhoneNumber" className="block text-gray-700">Last Name</label>
+                    <label htmlFor="LastName" className="block text-gray-700">Last Name</label>
                     <input
-                        type="tel"
-                        name="PhoneNumber"
-                        id="PhoneNumber"
+                        type="text"
+                        name="LastName"
+                        id="LastName"
                         className="w-full px-3 py-2 border rounded"
-                        pattern="^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$"
                         required
                     />
                 </div>
