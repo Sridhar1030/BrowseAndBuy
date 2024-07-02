@@ -10,7 +10,7 @@ function Navbar() {
         navigate('/')
     };
     return (
-        <nav className="sticky top-0 bg-slate-500 text-xl flex justify-between">
+        <nav className="sticky top-0 bg-slate-500 text-xl flex justify-between z-50">
             
             <div className="flex justify-start space-x-11 h-20 mx-3">
                 <div className="flex justify-center align-middle ">       

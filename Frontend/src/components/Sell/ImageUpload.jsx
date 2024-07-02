@@ -35,7 +35,7 @@ function ImageUpload() {
       ['image/jpeg', 'image/png', 'image/svg+xml'].includes(file.type)
     );
 
-    if (validFiles.length + images.length > 2) {
+    if (validFiles.length + images.length > 3) {
       alert("You can upload up to 2 images only");
       return;
     }

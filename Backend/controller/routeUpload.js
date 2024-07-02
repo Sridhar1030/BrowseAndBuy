@@ -29,6 +29,7 @@ router.post("/upload", upload.array("image", 3), async function (req, res) {
 		console.log(err);
 		res.status(500).json({
 			success: false,
+			error: err.message,
 			message: "Error uploading to Cloudinary",
 		});
 	}

@@ -27,7 +27,7 @@ function Menu() {
                             <img src={Book} alt="" /> Graphics Instruments
                         </div>
                     </Link>
-                    <Link to="/purchase/lab_coats">
+                    <Link to="/purchase/labcoats">
                         <div className=' mt-10 flex gap-4'>
                             <img src={Book} alt="" /> Lab Coats
                         </div>

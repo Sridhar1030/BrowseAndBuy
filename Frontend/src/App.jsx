@@ -13,6 +13,7 @@ import Login from './components/LogSign/Login';
 import Signup from './components/LogSign/Signup';
 import ProtectedRoute from './components/ProtectedRoute';  // Import the ProtectedRoute component
 import AdminImages from './components/Sell/AdminImages';
+import Labcoats from './components/Purchase/Labcoats/Labcoats';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/account" element={<ProtectedRoute element={<Account />} />} />
           <Route path="/purchase/book" element={<ProtectedRoute element={<Book />} />} />
           <Route path="/purchase/instruments" element={<ProtectedRoute element={<Instruments />} />} />
+          <Route path="/purchase/labcoats" element={<ProtectedRoute element={<Labcoats />} />} />
           <Route path="/form" element={<ProtectedRoute element={<Form />} />} />
         </Routes>
       </Router>

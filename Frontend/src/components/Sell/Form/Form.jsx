@@ -37,7 +37,7 @@ function Form() {
                         required
                     >
                         <option value="" disabled defaultValue hidden>Select Item Type</option>
-                        <option value="Engineering Books">Engineering Books</option>
+                        <option value="EngineeringBooks">Engineering Books</option>
                         <option value="Labcoats">Labcoats</option>
                         <option value="PYQS">PYQS</option>
                         <option value="Graphics Instruments">Graphics Instruments</option>

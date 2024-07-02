@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../Navbar/Navbar';
 import Menu from '../../Menu/Menu';
-import Card from './Card';
+import LCard from './LCard';
 
-function Book() {
-    const [books, setBooks] = useState([]);
+function Labcoats() {
+    const [labcoats, setLabcoats] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3000/api/items/EngineeringBooks')
+        fetch('http://localhost:3000/api/items/Labcoats')
             .then(response => response.json())
-            .then(data => setBooks(data))
-            .catch(error => console.error('Error fetching books:', error));
+            .then(data => setLabcoats(data))
+            .catch(error => console.error('Error fetching labcoats:', error));
     }, []);
 
     const handleSearch = (event) => {
@@ -40,7 +40,7 @@ function Book() {
                                     id="default-search"
                                     name="searchTerm"
                                     className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                    placeholder="Search Book..."
+                                    placeholder="Search Labcoats..."
                                     required
                                 />
                                 <button
@@ -53,9 +53,9 @@ function Book() {
                         </form>
                     </div>
                     <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6'>
-                        {books.map((book, index) => (
+                        {labcoats.map((labcoat, index) => (
                             <div key={index} className='mb-4'>
-                                <Card book={book} />
+                                <LCard labcoat={labcoat} />
                             </div>
                         ))}
                     </div>
@@ -65,4 +65,4 @@ function Book() {
     );
 }
 
-export default Book;
+export default Labcoats;

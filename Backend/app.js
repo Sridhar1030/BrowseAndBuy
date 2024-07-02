@@ -20,6 +20,7 @@ app.use((req, res, next) => {
 app.use("/sell", require("./routes/SellRoute"));
 app.use("/api/users", require("./controller/routeUpload"));
 app.use("/auth", require("./routes/AuthRoute"));
+app.use("/api", require("./routes/items"));
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
