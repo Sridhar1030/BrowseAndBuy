@@ -12,7 +12,7 @@ import Form from './components/Sell/Form/Form';
 import Login from './components/LogSign/Login';
 import Signup from './components/LogSign/Signup';
 import ProtectedRoute from './components/ProtectedRoute';  // Import the ProtectedRoute component
-import AdminImages from './AdminImages';
+import AdminImages from './components/Sell/AdminImages';
 
 function App() {
   return (
@@ -21,9 +21,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          
+
           <Route path="/home" element={<ProtectedRoute element={<Home />} />} />
-          <Route path="/AdminImages" element={<ProtectedRoute element={<AdminImages/>} />} />
+          <Route path="/AdminImages" element={<ProtectedRoute element={<AdminImages />} />} />
           <Route path="/purchase" element={<ProtectedRoute element={<Purchase />} />} />
           <Route path="/form/ImageUpload" element={<ProtectedRoute element={<ImageUpload />} />} />
           <Route path="/orders" element={<ProtectedRoute element={<Order />} />} />

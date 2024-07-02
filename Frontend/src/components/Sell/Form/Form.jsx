@@ -6,34 +6,33 @@ function Form() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         const formData = new FormData(e.target);
         const formDataObject = Object.fromEntries(formData.entries()); // Convert FormData to plain object
         console.log('Form Data:', formDataObject);
-        alert('Uploaded');
 
         // Navigate to ImageUpload and pass formDataObject as state
         navigate('/form/ImageUpload', { state: { formData: formDataObject } });
     };
 
     return (
-        <div className="h-screen flex items-center justify-center bg-gray-400 ">
+        <div className="h-screen flex items-center justify-center bg-gray-400">
             <form className="max-w-md mx-auto p-4 bg-white rounded shadow-md" onSubmit={handleSubmit}>
                 <div className="mb-4">
-                    <label htmlFor="ItemName" className="block text-gray-700">Item Name</label>
+                    <label htmlFor="Item_Name" className="block text-gray-700">Item Name</label>
                     <input
                         type="text"
-                        name="ItemName"
-                        id="ItemName"
+                        name="Item_Name"  
+                        id="Item_Name"
                         className="w-full px-3 py-2 border rounded"
                         required
                     />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="ItemType" className="block text-gray-700">Item Type</label>
+                    <label htmlFor="category" className="block text-gray-700">Category</label>
                     <select
-                        name="ItemType"
-                        id="ItemType"
+                        name="category"
+                        id="category"
                         className="w-full px-3 py-2 border rounded"
                         required
                     >
@@ -47,52 +46,52 @@ function Form() {
                     </select>
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="SemName" className="block text-gray-700">Semester</label>
-                    <input
-                        type="text"
-                        name="SemName"
-                        id="SemName"
-                        className="w-full px-3 py-2 border rounded"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label htmlFor="Price" className="block text-gray-700">Price in ₹</label>
+                    <label htmlFor="semester" className="block text-gray-700">Semester</label>
                     <input
                         type="number"
-                        name="Price"
-                        id="Price"
+                        name="semester"
+                        id="semester"
                         className="w-full px-3 py-2 border rounded"
                         required
                     />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="PhoneNumber" className="block text-gray-700">Phone number</label>
+                    <label htmlFor="price" className="block text-gray-700">Price in ₹</label>
+                    <input
+                        type="number"
+                        name="price"
+                        id="price"
+                        className="w-full px-3 py-2 border rounded"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="phone" className="block text-gray-700">Phone number</label>
                     <input
                         type="tel"
-                        name="PhoneNumber"
-                        id="PhoneNumber"
+                        name="phone"
+                        id="phone"
                         className="w-full px-3 py-2 border rounded"
                         pattern="^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$"
                         required
                     />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="FirstName" className="block text-gray-700">First Name</label>
+                    <label htmlFor="F_Name" className="block text-gray-700">First Name</label>
                     <input
                         type="text"
-                        name="FirstName"
-                        id="FirstName"
+                        name="F_Name"
+                        id="F_Name"
                         className="w-full px-3 py-2 border rounded"
                         required
                     />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="LastName" className="block text-gray-700">Last Name</label>
+                    <label htmlFor="L_Name" className="block text-gray-700">Last Name</label>
                     <input
                         type="text"
-                        name="LastName"
-                        id="LastName"
+                        name="L_Name"
+                        id="L_Name"
                         className="w-full px-3 py-2 border rounded"
                         required
                     />

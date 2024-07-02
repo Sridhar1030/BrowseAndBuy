@@ -43,47 +43,97 @@ function ImageUpload() {
     setImages((prevImages) => [...prevImages, ...validFiles]);
   };
 
+  const sellToBackend = async () => {
+    try {
+      // Check if formData is available
+      if (!formData) {
+        alert("Form data is not available. Please upload images first.");
+        return;
+      }
+  
+      // Check if formData.Image_ID is defined and is an array
+      if (!formData.Image_ID || !Array.isArray(formData.Image_ID)) {
+        console.error("Image_ID is not defined or is not an array:", formData.Image_ID);
+        alert("Error: Image data is missing or not properly formatted.");
+        return;
+      }
+  
+      const url = "http://localhost:3000/sell";
+
+      // Create data object for form fields
+      const data = {
+        Item_Name: formData.Item_Name || '',
+        category: formData.category || '',
+        semester: formData.semester || '',
+        price: formData.price || '',
+        phone: formData.phone || '',
+        F_Name: formData.F_Name || '',
+        L_Name: formData.L_Name || '',
+        Image_ID: formData.Image_ID.join(',')||'123'
+      };
+
+      // Example of sending formData to /sell endpoint
+      const response = await axios.post(url, data);
+
+      console.log('Response from backend:', response.data);
+      alert("Form data has been successfully uploaded to /sell endpoint");
+
+      // Handle success logic here if needed
+
+    } catch (error) {
+      console.error('Error uploading data:', error);
+      alert("An error occurred while uploading the formData to /sell endpoint. Please try again.");
+      // Handle error logic
+    }
+  };
+
   const handleUploadClick = async () => {
     if (!accepted) {
       alert("Please accept the rules before uploading");
       return;
     }
-  
+
     if (images.length === 0) {
       alert("Please select images to upload");
       return;
     }
-  
+
     setUploading(true);
-  
+
     const formDataToUpdate = { ...formData }; // Make a copy of existing formData
-  
+
     const formDataForUpload = new FormData();
     images.forEach((image, index) => {
       formDataForUpload.append(`image`, image); // Ensure backend expects this field name
     });
-  
+
     try {
+      console.log("Sending images to the backend...");
       const response = await axios.post('http://localhost:3000/api/users/upload', formDataForUpload, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-  
-      // Assuming response.data contains the uploaded image data
-      const uploadResults = response.data.data;
-      console.log("Files uploaded successfully to Cloudinary", uploadResults);
-  
-      // Update formDataToUpdate with public_ids
-      formDataToUpdate.public_ids = uploadResults.map(result => result.public_id);
-  
-      setFormData(formDataToUpdate); // Update state with updated form data
-  
-      // Logging updated form data
-      console.log("Updated FormData:", formDataToUpdate);
-  
-      alert("Files have been uploaded successfully");
-  
+
+      // Check if response data is received and has 'data' property
+      if (response.data && response.data.data) {
+        const uploadResults = response.data.data;
+        console.log("Files uploaded successfully to Cloudinary", uploadResults);
+
+        // Update formDataToUpdate with Image_ID
+        formDataToUpdate.Image_ID = uploadResults.map(result => result.public_id);
+
+        setFormData(formDataToUpdate); // Update state with updated form data
+
+        // Logging updated form data
+        console.log("Updated FormData:", formDataToUpdate);
+
+        alert("Files have been uploaded successfully");
+      } else {
+        console.error("Unexpected response format:", response);
+        alert("An error occurred while uploading the files. Please try again later.");
+      }
+
     } catch (err) {
       console.error("Error uploading files:", err);
       alert("An error occurred while uploading the files. Please try again.");
@@ -131,8 +181,8 @@ function ImageUpload() {
             </div>
             <input id="dropzone-file" type="file" multiple name="file" className="hidden" onChange={handleImage} />
           </label>
-          <button 
-            onClick={handleUploadClick} 
+          <button
+            onClick={handleUploadClick}
             className={`text-white font-bold py-2 px-4 rounded-full m-3 self-end ${uploading ? 'bg-red-500' : 'bg-blue-500 hover:bg-blue-700'}`}
             disabled={uploading}
           >
@@ -148,6 +198,9 @@ function ImageUpload() {
             </button>
             <button className='mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' onClick={handleAdmin}>
               ADMIN
+            </button>
+            <button className='mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded' onClick={sellToBackend}>
+              Sell
             </button>
           </div>
         </div>

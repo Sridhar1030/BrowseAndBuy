@@ -11,7 +11,7 @@ function Signup() {
 
     const handleSignup = () => {
         console.log({ username, password, email })
-        const url = "http://localhost:3000/signup"
+        const url = "http://localhost:3000/auth/signup"
         const data = { username, password, email }
         axios.post(url, data)
             .then((res) => {

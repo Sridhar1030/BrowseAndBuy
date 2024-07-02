@@ -11,7 +11,7 @@ function Login ()  {
 
     const login = async () => {
         console.log({ username, password, email });
-        const url = "http://localhost:3000/login";
+        const url = "http://localhost:3000/auth/login";
         const data = { username, password, email };
         
         try {

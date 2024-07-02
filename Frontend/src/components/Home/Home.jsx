@@ -8,7 +8,7 @@ function Home() {
         <>
         <div><Navbar/></div>
         <div className='heading'>
-        <h1>Sell online with <br /> <span> Browse and Buy </span></h1>
+        <h1> online with <br /> <span> Browse and Buy </span></h1>
         <p>Trusted by over 10,000 students worldwide</p>
         </div>
         <div className="middle">
