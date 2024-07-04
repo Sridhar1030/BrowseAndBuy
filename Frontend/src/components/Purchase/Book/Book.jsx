@@ -5,19 +5,37 @@ import Card from './Card';
 
 function Book() {
     const [books, setBooks] = useState([]);
+    const [filteredBooks, setFilteredBooks] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [isEmpty, setIsEmpty] = useState(false); // State to track if filteredBooks is empty
 
     useEffect(() => {
         fetch('http://localhost:3000/api/items/EngineeringBooks')
             .then(response => response.json())
-            .then(data => setBooks(data))
+            .then(data => {
+                setBooks(data);
+                setFilteredBooks(data); // Initialize filteredBooks with all books
+            })
             .catch(error => console.error('Error fetching books:', error));
     }, []);
 
     const handleSearch = (event) => {
-        event.preventDefault();
-        const searchTerm = event.target.elements.searchTerm.value.trim();
-        // Implement search functionality here if needed
+        event.preventDefault(); // Prevent form submission
         console.log('Search term:', searchTerm);
+
+        if (searchTerm === '') {
+            setFilteredBooks(books); // Display all books if search term is empty
+        } else {
+            const filtered = books.filter(book => book.Item_Name.toLowerCase().includes(searchTerm.toLowerCase()));
+            setFilteredBooks(filtered);
+        }
+
+        // Check if filteredBooks is empty
+        setIsEmpty(filteredBooks.length === 0 && searchTerm !== '');
+    };
+
+    const handleChange = (event) => {
+        setSearchTerm(event.target.value);
     };
 
     return (
@@ -32,16 +50,17 @@ function Book() {
                             <div className="relative w-full">
                                 <div className="absolute inset-y-0 flex items-center pl-3 pointer-events-none">
                                     <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                     </svg>
                                 </div>
                                 <input
                                     type="search"
                                     id="default-search"
                                     name="searchTerm"
+                                    value={searchTerm}
+                                    onChange={handleChange}
                                     className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                                     placeholder="Search Book..."
-                                    required
                                 />
                                 <button
                                     type="submit"
@@ -52,13 +71,17 @@ function Book() {
                             </div>
                         </form>
                     </div>
-                    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6'>
-                        {books.map((book, index) => (
-                            <div key={index} className='mb-4'>
-                                <Card book={book} />
-                            </div>
-                        ))}
-                    </div>
+                    {isEmpty ? (
+                        <div className="text-center text-gray-600 mt-4">No such books found.</div>
+                    ) : (
+                        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6'>
+                            {filteredBooks.map((book, index) => (
+                                <div key={book._id} className='mb-4'>
+                                    <Card book={book} />
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </>
