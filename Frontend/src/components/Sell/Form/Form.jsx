@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../../Navbar/Navbar';
 
 function Form() {
     const navigate = useNavigate();
@@ -16,8 +17,10 @@ function Form() {
     };
 
     return (
-        <div className="h-screen flex items-center justify-center bg-gray-400">
-            <form className="max-w-md mx-auto p-4 bg-white rounded shadow-md" onSubmit={handleSubmit}>
+        <>
+        <Navbar/>
+        <div className="h-full flex items-center justify-center bg-gray-400 ">
+            <form className="max-w-md mx-auto p-4 bg-white rounded shadow-md mb-10" onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label htmlFor="Item_Name" className="block text-gray-700">Item Name</label>
                     <input
@@ -84,7 +87,7 @@ function Form() {
                         id="F_Name"
                         className="w-full px-3 py-2 border rounded"
                         required
-                    />
+                        />
                 </div>
                 <div className="mb-4">
                     <label htmlFor="L_Name" className="block text-gray-700">Last Name</label>
@@ -94,16 +97,17 @@ function Form() {
                         id="L_Name"
                         className="w-full px-3 py-2 border rounded"
                         required
-                    />
+                        />
                 </div>
                 <button
                     type="submit"
                     className="w-full bg-blue-500 text-white py-2 rounded"
-                >
+                    >
                     Submit
                 </button>
             </form>
         </div>
+                    </>
     );
 }
 

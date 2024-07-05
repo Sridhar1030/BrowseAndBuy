@@ -2,7 +2,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from "./components/Navbar/Navbar";
 import Home from './components/Home/Home';
-import Purchase from './components/Purchase/purchase';
+import Purchase from './components/Purchase/Purchase';
 import Order from './components/Order/Order';
 import ImageUpload from './components/Sell/ImageUpload';
 import Account from './components/Account/Account';
@@ -14,6 +14,7 @@ import Signup from './components/LogSign/Signup';
 import ProtectedRoute from './components/ProtectedRoute';  // Import the ProtectedRoute component
 import AdminImages from './components/Sell/AdminImages';
 import Labcoats from './components/Purchase/Labcoats/Labcoats';
+import Cart from './components/Cart/Cart';
 
 function App() {
   return (
@@ -33,6 +34,8 @@ function App() {
           <Route path="/purchase/instruments" element={<ProtectedRoute element={<Instruments />} />} />
           <Route path="/purchase/labcoats" element={<ProtectedRoute element={<Labcoats />} />} />
           <Route path="/form" element={<ProtectedRoute element={<Form />} />} />
+          <Route path="/cart" element={<ProtectedRoute element={<Cart/>} />} />
+
         </Routes>
       </Router>
     </>

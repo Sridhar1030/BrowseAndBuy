@@ -80,6 +80,7 @@ function Purchase() {
                                     <Card book={book} />
                                 </div>
                             ))}
+                            
                         </div>
                     )}
                 </div>
