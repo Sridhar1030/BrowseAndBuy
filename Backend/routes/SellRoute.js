@@ -1,6 +1,6 @@
-const express = require("express");
-const router = express.Router();
-const Sell = require("../models/Sell");
+import { Router } from "express";
+const router = Router();
+import Sell from "../models/Sell";
 
 router.post("/", async (req, res) => {
 	console.log("Received request body:", req.body);
@@ -30,4 +30,4 @@ router.post("/", async (req, res) => {
 	}
 });
 
-module.exports = router;
+export default router;

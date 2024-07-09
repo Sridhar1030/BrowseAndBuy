@@ -1,6 +1,6 @@
 // models/Sell.js
-const mongoose = require("mongoose");
-const sellSchema = new mongoose.Schema({
+import { Schema, model } from "mongoose";
+const sellSchema = new Schema({
 	F_Name: String,
 	Image_ID: String,
 	Item_Name: String,
@@ -12,6 +12,6 @@ const sellSchema = new mongoose.Schema({
 	Approved: { type: Boolean, default: false },
 });
 
-const Sell = mongoose.model("Sell", sellSchema);
+const Sell = model("Sell", sellSchema);
 
-module.exports = Sell;
+export default Sell;

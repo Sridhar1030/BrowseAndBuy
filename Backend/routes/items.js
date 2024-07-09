@@ -1,11 +1,11 @@
 // routes/items.js
-const express = require('express');
-const router = express.Router();
-const Sell = require('../models/Sell');
+import { Router } from 'express';
+const router = Router();
+import { find } from '../models/Sell';
 
 router.get('/items/:category', async (req, res) => {
     try {
-        const items = await Sell.find({ category: req.params.category });
+        const items = await find({ category: req.params.category });
         res.json(items);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -13,11 +13,11 @@ router.get('/items/:category', async (req, res) => {
 });
 router.get('/items/', async (req, res) => {
     try {
-        const items = await Sell.find();
+        const items = await find();
         res.json(items);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-module.exports = router;
+export default router;
