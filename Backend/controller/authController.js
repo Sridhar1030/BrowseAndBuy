@@ -28,7 +28,7 @@ const signup = asyncHandler(async (req, res) => {
             (field) => field?.trim() === ""
         )
     ) {
-        throw new ApiError(400, "All field is required");
+        return res.status(400).json({ message: "All fields are required" });
     }
 
     const userExists = await User.findOne({
@@ -36,7 +36,7 @@ const signup = asyncHandler(async (req, res) => {
     });
 
     if (userExists) {
-        throw new ApiError(400, "User already exists");
+        return res.status(400).json({ message: "User already exists" });
     }
 
     const newUser = await User.create({ username, email, password });
@@ -46,10 +46,7 @@ const signup = asyncHandler(async (req, res) => {
     );
 
     if (!user) {
-        throw new ApiError(
-            500,
-            "some thing went wrong while regsitering the user"
-        );
+        return res.status(400).json({ message: "some thing went wrong while regsitering the user" });
     }
 
     return res
@@ -57,52 +54,52 @@ const signup = asyncHandler(async (req, res) => {
         .json(new ApiResponse(201, "User successfully created", user));
 });
 
-const login = asyncHandler(async (req, res) => {
-    const { email, username, password } = req.body;
+    const login = asyncHandler(async (req, res) => {
+        const { email, username, password } = req.body;
 
-    if (!((email || username) && password)) {
-        throw new ApiError(400, "All field is required");
-    }
+        if (!((email || username) && password)) {
+            throw new ApiError(400, "All field is required");
+        }
 
-    const user = await User.findOne({
-        $or: [{ email }, { username }],
-    });
+        const user = await User.findOne({
+            $or: [{ email }, { username }],
+        });
 
-    if (!user) {
-        throw new ApiError(404, "User not found");
-    }
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
 
-    const checkPassword = await user.isPasswordCorrect(password);
+        const checkPassword = await user.isPasswordCorrect(password);
 
-    if (!checkPassword) {
-        throw new ApiError(401, "Password is wrong");
-    }
+        if (!checkPassword) {
+            throw new ApiError(401, "Password is wrong");
+        }
 
-    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
-        user._id
-    );
-
-    const loggedInUser = await User.findById(user._id).select(
-        "-password -refreshToken"
-    );
-
-    const options = {
-        httpOnly: true,
-        secure: true,
-    };
-
-    return res
-        .status(200)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", refreshToken, options)
-        .json(
-            new ApiResponse(201, "User logged In Successfully", {
-                user: loggedInUser,
-                accessToken,
-                refreshToken,
-            })
+        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+            user._id
         );
-});
+
+        const loggedInUser = await User.findById(user._id).select(
+            "-password -refreshToken"
+        );
+
+        const options = {
+            httpOnly: true,
+            secure: true,
+        };
+
+        return res
+            .status(201)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", refreshToken, options)
+            .json(
+                new ApiResponse(201, "User logged In Successfully", {
+                    user: loggedInUser,
+                    accessToken,
+                    refreshToken,
+                })
+            );
+    });
 
 const logout = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(

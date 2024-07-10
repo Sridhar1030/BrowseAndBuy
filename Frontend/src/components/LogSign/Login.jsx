@@ -1,32 +1,32 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-
-function Login ()  {
+function Login() {
     const navigate = useNavigate();
-    const [username, setusername] = useState('');
-    const [email, setemail] = useState('');
-    const [password, setpassword] = useState('');
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const login = async () => {
-        console.log({ username, password, email });
         const url = "http://localhost:3000/auth/login";
-        const data = { username, password, email };
-        
+        const data = (email !== '') ? { email, password } : { username, password };
+
         try {
             const res = await axios.post(url, data);
             console.log(res.data);
-            if (res.data.message) {
-                alert(res.data.message);
-                if(res.data.token){
-                    localStorage.setItem("token",res.data.token)
-                    navigate("/home")
+            if (res.status === 201) {
+                if (res.data.data.accessToken && res.data.data.refreshToken) {
+                    localStorage.setItem("accessToken", res.data.accessToken);
+                    localStorage.setItem("refreshToken", res.data.refreshToken);
+                    navigate("/home");
                 }
+            } else {
+                console.log("error",res.data.message); // Handle other response codes if necessary
             }
         } catch (err) {
-            console.log(err);
-            alert("server is in error");
+            console.error(err);
+            alert("Server error occurred");
         }
     };
 
@@ -35,18 +35,20 @@ function Login ()  {
             <div className="bg-white p-8 rounded shadow-md w-96">
                 <h2 className="text-2xl font-semibold mb-4">Login</h2>
                 <form>
-                    <div className="mb-4">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setemail(e.target.value)}
-                            className="mt-1 p-2 w-full border rounded"
-                            placeholder="Enter your email"
-                        />
-                    </div>
+                    {email !== '' &&
+                        <div className="mb-4">
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="mt-1 p-2 w-full border rounded"
+                                placeholder="Enter your email"
+                            />
+                        </div>
+                    }
                     <div className="mb-4">
                         <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                             Username
@@ -54,7 +56,7 @@ function Login ()  {
                         <input
                             type="text"
                             value={username}
-                            onChange={(e) => setusername(e.target.value)}
+                            onChange={(e) => setUsername(e.target.value)}
                             className="mt-1 p-2 w-full border rounded"
                             placeholder="Enter username"
                         />
@@ -66,26 +68,26 @@ function Login ()  {
                         <input
                             type="password"
                             value={password}
-                            onChange={(e) => setpassword(e.target.value)}
+                            onChange={(e) => setPassword(e.target.value)}
                             className="mt-1 p-2 w-full border rounded"
                             placeholder="Enter your password"
                         />
                     </div>
                 </form>
                 <button
-                    type="submit"
+                    type="button"
                     onClick={login}
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                 >
                     Log In
                 </button>
-                Don't have an account?
+                <p className='mt-2' >Do not have an account?</p>
                 <a href="/signup" className="text-blue-500 hover:underline flex">
                     Register
                 </a>
             </div>
         </div>
     );
-};
+}
 
 export default Login;
