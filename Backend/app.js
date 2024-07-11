@@ -8,9 +8,6 @@ import cookieParser from "cookie-parser";
 
 
 
-dotenv.config();
-
-
 // Create Express app
 const app = express();
 

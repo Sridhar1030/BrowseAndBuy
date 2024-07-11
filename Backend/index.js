@@ -5,6 +5,10 @@ import app from "./app.js"; // Change require to import
 
 const PORT = process.env.PORT || 3000;
 
+dotenv.config({
+    path: './.env'
+})
+
 connectDB()
     .then(() => {
         console.log("MongoDB connection success");
