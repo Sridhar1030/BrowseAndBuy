@@ -1,0 +1,2 @@
+while selling the product make a table with name phone number semester and the image public id 
+so image id will be related to the persons name and semester and we can render the image from cloudinary

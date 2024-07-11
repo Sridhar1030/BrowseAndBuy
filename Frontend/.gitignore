@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -24,9 +23,3 @@ dist-ssr
 *.sln
 *.sw?
 
-postcss.config.js
-tailwind.config.js
-vite.config.js
-=======
-/Backend/node_modules
->>>>>>> 85a70479d68661ab6337757d2845b1b057e07dfd
