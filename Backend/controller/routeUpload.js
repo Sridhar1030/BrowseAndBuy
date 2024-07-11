@@ -9,7 +9,7 @@ router.post("/upload", upload.array("image", 3), async (req, res) => {
     try {
 
 
-        console.log("CLOUDINARY_CLOUD_NAME:", process.env.CLUODINARY_CLOUD_NAME);
+        console.log("CLOUDINARY_CLOUD_NAME:", "sridhar1");
         console.log("CLOUDINARY_API_KEY:", process.env.CLOUDINARY_API_KEY);
         console.log("CLOUDINARY_API_SECRET:", process.env.CLOUDINARY_API_SECRET);
 
@@ -24,7 +24,7 @@ router.post("/upload", upload.array("image", 3), async (req, res) => {
 
 
         cloudinary.config({
-            cloud_name: process.env.CLUODINARY_CLOUD_NAME,
+            cloud_name: "sridhar1",
             api_key: process.env.CLOUDINARY_API_KEY,
             api_secret: process.env.CLOUDINARY_API_SECRET,
         });
