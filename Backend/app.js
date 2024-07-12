@@ -16,7 +16,7 @@ import userRoute from "./controller/routeUpload.js";
 import sellRoute from "./routes/SellRoute.js";
 import authRouter from "./routes/AuthRoute.js";
 import itemsRouter from "./routes/items.js";
-
+import CartRoute from "./routes/CartRoute.js"
 
 
 // Middleware
@@ -30,6 +30,7 @@ app.use("/sell", sellRoute);
 app.use("/api/users", userRoute); // Use userRoute imported with require
 app.use("/auth", authRouter);
 app.use("/api", itemsRouter);
+app.use("/cart/",CartRoute)
 
 // Example route
 app.get("/", (req, res) => {

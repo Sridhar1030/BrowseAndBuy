@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const name = "BAndB"
+const name = "B&B"
 const connectDB = async () => {
     try {
         const conn = await mongoose.connect(`${process.env.MONGO_URI}/${name}`);
