@@ -86,13 +86,18 @@ const removeCart = async (req, res) => {
     }
 };
 
+
+
+
+
+
 const addCartQty = async (req, res) => {
     try {
-        const { userId } = req;
-        const { productId } = req.body;
+        const { userId, Productid } = req.body; // Correctly destructure userId and productId
+        console.log(req.body);
 
         const response = await cartModel.findOneAndUpdate(
-            { user: userId, "cartItems.product.id": productId },
+            { user: userId, "cartItems.product.id": Productid },
             { $inc: { "cartItems.$.quantity": 1 } },
             { new: true }
         );
@@ -102,20 +107,29 @@ const addCartQty = async (req, res) => {
             return;
         }
 
-        res.status(200).json({ message: "Added qty" });
+        res.status(200).json({ message: "Added qty", updatedCart: response });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
 
+
+
+
+
+
+
+
 const decreaseCartQty = async (req, res) => {
     try {
-        const { userId } = req;
-        const { productId } = req.body;
+        const { userId } = req.body;
+        const { Productid } = req.body;
+        console.log(Productid)
+        console.log(userId)
 
         const response = await cartModel.findOneAndUpdate(
-            { user: userId, "cartItems.product.id": productId },
+            { user: userId, "cartItems.product.id": Productid },
             { $inc: { "cartItems.$.quantity": -1 } },
             { new: true }
         );
@@ -132,9 +146,13 @@ const decreaseCartQty = async (req, res) => {
     }
 };
 
+
+
+
 const getUserCart = async (req, res) => {
     try {
-        const { userId } = req;
+        const { userId } = req.body;
+        console.log(req.body)
         const cart = await cartModel.findOne({ user: userId });
 
         if (!cart) {
@@ -149,9 +167,13 @@ const getUserCart = async (req, res) => {
     }
 };
 
+
+
+
 const getCartNumber = async (req, res) => {
     try {
         const { userId } = req;
+        
         const cart = await cartModel.findOne({ user: userId });
 
         if (!cart) {
