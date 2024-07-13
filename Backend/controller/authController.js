@@ -46,64 +46,80 @@ const signup = asyncHandler(async (req, res) => {
     );
 
     if (!user) {
-        return res.status(400).json({ message: "some thing went wrong while regsitering the user" });
+        return res.status(400).json({
+            message: "some thing went wrong while regsitering the user",
+        });
     }
 
-    return res
-        .status(200)
-        .json(new ApiResponse(201, "User successfully created", user));
+    return res.status(200).json(
+        new ApiResponse(201, "User successfully created", {
+            user,
+            chat: req.chat || "empty",
+        })
+    );
 });
 
-    const login = asyncHandler(async (req, res) => {
-        const { email, username, password } = req.body;
+const login = asyncHandler(async (req, res) => {
+    const { email, username, password } = req.body;
 
-        if (!((email || username) && password)) {
-            throw new ApiError(400, "All field is required");
-        }
+    if (!((email || username) && password)) {
+        throw new ApiError(400, "All field is required");
+    }
 
-        const user = await User.findOne({
-            $or: [{ email }, { username }],
-        });
-
-        if (!user) {
-            throw new ApiError(404, "User not found");
-        }
-
-        const checkPassword = await user.isPasswordCorrect(password);
-
-        if (!checkPassword) {
-            throw new ApiError(401, "Password is wrong");
-        }
-
-        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
-            user._id
-        );
-
-        const loggedInUser = await User.findById(user._id).select(
-            "-password -refreshToken"
-        );
-
-        const options = {
-            httpOnly: true,
-            secure: true,
-        };
-
-        return res
-            .status(201)
-            .cookie("accessToken", accessToken, options)
-            .cookie("refreshToken", refreshToken, options)
-            .json(
-                new ApiResponse(201, "User logged In Successfully", {
-                    user: loggedInUser,
-                    accessToken,
-                    refreshToken,
-                })
-            );
+    const user = await User.findOne({
+        $or: [{ email }, { username }],
     });
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    const checkPassword = await user.isPasswordCorrect(password);
+
+    if (!checkPassword) {
+        throw new ApiError(401, "Password is wrong");
+    }
+
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+        user._id
+    );
+
+    const loggedInUser = await User.findById(user._id).select(
+        "-password -refreshToken"
+    );
+
+    const options = {
+        httpOnly: true,
+        secure: true,
+    };
+
+    return res
+        .status(201)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(
+            new ApiResponse(201, "User logged In Successfully", {
+                user: loggedInUser,
+                accessToken,
+                refreshToken,
+            })
+        );
+});
+
+const chatData = asyncHandler(async (req, res) => {
+    return res
+        .status(201)
+        .json(
+            new ApiResponse(201, "chat detail is fetch", {
+                user: req.user,
+                chat: req.chat,
+            })
+        );
+});
 
 const logout = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
-        req.user._id,
+        req.user?._id,
         {
             $unset: {
                 refreshToken: 1,
@@ -127,9 +143,9 @@ const logout = asyncHandler(async (req, res) => {
 });
 
 const changePassword = asyncHandler(async (req, res) => {
-    const { oldPassword, newPassword, confirmPassword  } = req.body;
+    const { oldPassword, newPassword, confirmPassword } = req.body;
 
-    if (newPassword !== confirmPassword ) {
+    if (newPassword !== confirmPassword) {
         throw new ApiError(400, "Password must be same");
     }
 
@@ -150,4 +166,11 @@ const changePassword = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, "Password is updated", {}));
 });
 
-export { generateAccessAndRefreshToken, login, signup, logout, changePassword };
+export {
+    generateAccessAndRefreshToken,
+    login,
+    signup,
+    logout,
+    chatData,
+    changePassword,
+};

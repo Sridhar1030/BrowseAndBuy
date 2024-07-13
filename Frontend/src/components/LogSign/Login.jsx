@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+
 function Login() {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
@@ -10,15 +11,17 @@ function Login() {
 
     const login = async () => {
         const url = "http://localhost:3000/auth/login";
-        const data = (email !== '') ? { email, password } : { username, password };
+        const data = (email !== '') ? { email, password } : { username, password }; 
 
         try {
             const res = await axios.post(url, data);
-            console.log(res.data);
             if (res.status === 201) {
                 if (res.data.data.accessToken && res.data.data.refreshToken) {
                     localStorage.setItem("accessToken", res.data.data.accessToken);
+                    const accessToken = localStorage.getItem("accessToken");
+                    console.log(accessToken)
                     console.log("accessToken" ,res.data.data.accessToken)
+                    localStorage.setItem("user", res.data.data.user.username)
                     localStorage.setItem("refreshToken", res.data.data.refreshToken);
                     navigate("/home");
                 }

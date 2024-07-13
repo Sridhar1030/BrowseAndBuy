@@ -27,7 +27,19 @@ const Signup = () => {
         try {
             const url = "http://localhost:3000/auth/signup";
             const response = await axios.post(url, formData);
+            // console.log(response);  
             setMessage(response.data.message);
+            // console.log(response.data.data.chat)
+
+            // localStorage.setItem("user", response.data.data.chat.username);
+            // localStorage.setItem("secret", response.data.data.chat.secret);
+            
+            // const user = localStorage.getItem("user");
+            // console.log("user",user)
+
+            // const secret = localStorage.getItem("secret");
+            // console.log("secret",secret)
+
         } catch (error) {
             setError(error.response.data.message || "An error occurred");
         }

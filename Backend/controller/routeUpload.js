@@ -2,17 +2,20 @@ import { Router } from "express";
 // import cloudinary from "../utils.js/cloudinary.js";
 import { v2 as cloudinary } from "cloudinary";
 import upload from "../middleware/multer.js";
+import verifyJwt from "../middleware/auth.middleware.js";
+import { FetchChatUser } from "../middleware/createChatUser.js";
+import { chatData } from "./authController.js";
 
 const router = Router();
 
 router.post("/upload", upload.array("image", 3), async (req, res) => {
     try {
-
-
         console.log("CLOUDINARY_CLOUD_NAME:", "sridhar1");
         console.log("CLOUDINARY_API_KEY:", process.env.CLOUDINARY_API_KEY);
-        console.log("CLOUDINARY_API_SECRET:", process.env.CLOUDINARY_API_SECRET);
-
+        console.log(
+            "CLOUDINARY_API_SECRET:",
+            process.env.CLOUDINARY_API_SECRET
+        );
 
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({
@@ -21,17 +24,11 @@ router.post("/upload", upload.array("image", 3), async (req, res) => {
             });
         }
 
-
-
         cloudinary.config({
             cloud_name: "sridhar1",
             api_key: process.env.CLOUDINARY_API_KEY,
             api_secret: process.env.CLOUDINARY_API_SECRET,
         });
-
-        
-
-        
 
         const uploadResults = [];
         for (const file of req.files) {
@@ -56,5 +53,7 @@ router.post("/upload", upload.array("image", 3), async (req, res) => {
         });
     }
 });
+
+// router.get("/chat", FetchChatUser, chatData);
 
 export default router;
