@@ -151,8 +151,8 @@ const decreaseCartQty = async (req, res) => {
 
 const getUserCart = async (req, res) => {
     try {
-        const { userId } = req.body;
-        console.log(req.body)
+        const { userId } = req.query;
+        console.log(req.query)
         const cart = await cartModel.findOne({ user: userId });
 
         if (!cart) {
@@ -172,7 +172,8 @@ const getUserCart = async (req, res) => {
 
 const getCartNumber = async (req, res) => {
     try {
-        const { userId } = req;
+        const { userId } = req.body;
+        console.log(req.body)
         
         const cart = await cartModel.findOne({ user: userId });
 

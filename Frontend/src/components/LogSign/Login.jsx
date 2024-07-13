@@ -14,16 +14,19 @@ function Login() {
 
         try {
             const res = await axios.post(url, data);
+            const user = res.data.data.user
             console.log(res.data);
             if (res.status === 201) {
+                console.log(res)
                 if (res.data.data.accessToken && res.data.data.refreshToken) {
                     localStorage.setItem("accessToken", res.data.data.accessToken);
-                    console.log("accessToken" ,res.data.data.accessToken)
+                    console.log("accessToken", res.data.data.accessToken)
                     localStorage.setItem("refreshToken", res.data.data.refreshToken);
+                    localStorage.setItem('user', JSON.stringify(user));
                     navigate("/home");
                 }
             } else {
-                console.log("error",res.data.message); // Handle other response codes if necessary
+                console.log("error", res.data.message); // Handle other response codes if necessary
             }
         } catch (err) {
             console.error(err);

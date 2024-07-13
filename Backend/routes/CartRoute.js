@@ -9,11 +9,11 @@ import {
 } from "../controller/cartController.js"; 
 
 const CartRoute = express.Router();
-CartRoute.get("/get-user-cart-number",  getCartNumber);
-CartRoute.get("/get-user-cart",  getUserCart);
-CartRoute.post("/add-cart",  addCart);
+CartRoute.get("/get-user-cart-number",  getCartNumber); //NotUseful
+CartRoute.get("/get-user-cart",  getUserCart);   //done
+CartRoute.post("/add-cart",  addCart);      
 CartRoute.delete("/remove-cart",  removeCart);
-CartRoute.post("/add-qty",  addCartQty);
-CartRoute.post("/decrease-qty",  decreaseCartQty);
+CartRoute.post("/add-qty",  addCartQty); //done
+CartRoute.post("/decrease-qty",  decreaseCartQty);  //done
 
 export default CartRoute;

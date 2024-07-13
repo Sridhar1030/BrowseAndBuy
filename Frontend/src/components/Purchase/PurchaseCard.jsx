@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { Cloudinary } from "@cloudinary/url-gen";
 import { AdvancedImage } from '@cloudinary/react';
-import { jwtDecode } from 'jwt-decode';
 import { fit } from "@cloudinary/url-gen/actions/resize";
+import axios from 'axios';
 
 function PurchaseCard({ book }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
     const cld = new Cloudinary({
         cloud: {
             cloudName: 'sridhar1'
@@ -27,18 +26,45 @@ function PurchaseCard({ book }) {
     const image = cld.image(currentImageId);
     image.resize(fit().width(500).height(750));
 
-    const handleCart = () => {
+    const handleCart = async () => {
         console.log("cart button clicked");
+        const token = localStorage.getItem('user');
+        const user = JSON.parse(token);
+        const userId = user._id;
+        const productData = {
+            id: book._id,
+            image: book.Image_ID,
+            category: book.category,
+            title: book.Item_Name,
+            price: book.price,
+            quantity: 1
+        };
+        const data = {
+            userId,
+            product: productData
+        };
+        console.log(data);
+
+        const url = "http://localhost:3000/cart/add-cart";
+
+        try {
+            const response = await axios.post(url, data);
+            console.log('Cart response:', response.data);
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+        }
     };
 
     const handleBuy = () => {
         console.log("buy button clicked");
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('user');
+        console.log(token);
+
         if (token) {
             try {
-                const decodedToken = jwtDecode(token);
-                const username = decodedToken.data.username;
-                console.log(username, "wants to buy");
+                const user = JSON.parse(token);
+                const userId = user._id;
+                console.log(userId, "wants to buy");
             } catch (error) {
                 console.log("Failed to decode token:", error);
             }
@@ -68,7 +94,6 @@ function PurchaseCard({ book }) {
                                     &gt;
                                 </button>
                             </div>
-                            
                         </>
                     )}
                 </div>
@@ -81,7 +106,7 @@ function PurchaseCard({ book }) {
                     <p className='text-gray-700 mb-2'>Category: {book.category}</p>
                     <p className='text-gray-700 mb-2'>Approved: {book.Approved ? "Yes" : "No"}</p>
                 </div>
-                <div className='flex w-full justify-evenly  space-x-10'>
+                <div className='flex w-full justify-evenly space-x-10'>
                     <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={handleBuy}>
                         Buy
                     </button>
