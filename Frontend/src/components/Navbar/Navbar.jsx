@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import profileSvg from '../../assets/profile.svg';
-
+import axios from 'axios';
+import { useEffect } from 'react';
 function Navbar() {
     const navigate = useNavigate();
 
@@ -11,6 +12,7 @@ function Navbar() {
         localStorage.removeItem('user')
         navigate('/')
     };
+
     return (
         <nav className="sticky top-0 bg-slate-500 text-xl flex justify-between z-50">
 
@@ -37,9 +39,13 @@ function Navbar() {
                 </div> */}
             </div>
             <div className='mx-5 flex items-center gap-10'>
-                <button ><Link to="/cart" className='flex justify-center align-middle gap-4 hover:size-8'>
-                    <img width={30} height={30} src="https://img.icons8.com/ios/50/shopping-cart--v1.png" alt="shopping-cart--v1" />
-                </Link>
+                <button >
+                    <div className='-mb-2 -mr-1 flex justify-center  text-sm'>
+                        Number
+                    </div>
+                    <Link to="/cart" className='flex justify-center align-middle gap-4'>
+                        <img width={30} height={30} src="https://img.icons8.com/ios/50/shopping-cart--v1.png" alt="shopping-cart--v1" />
+                    </Link>
                 </button>
 
                 <button onClick={handleLogout} className=' hover:text-red-500'>

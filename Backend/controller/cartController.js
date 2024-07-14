@@ -57,6 +57,7 @@ const addCart = async (req, res) => {
 const removeCart = async (req, res) => {
     try {
         const { userId, id } = req.body; // Extract userId and product id from the request body
+        console.log(req.body);
 
         if (!userId) {
             throw new Error("User ID is required");
@@ -172,8 +173,8 @@ const getUserCart = async (req, res) => {
 
 const getCartNumber = async (req, res) => {
     try {
-        const { userId } = req.body;
-        console.log(req.body)
+        const { userId } = req.query;
+        console.log(req.query)
         
         const cart = await cartModel.findOne({ user: userId });
 

@@ -148,7 +148,7 @@ function ImageUpload() {
 
   return (
     <div className='bg-gray-400 flex flex-col min-h-screen'>
-      <Navbar />
+      
       <div className='flex flex-col items-center justify-center'>
         {!accepted && (
           <div className="bg-red-500 text-white text-sm font-bold px-4 py-3">

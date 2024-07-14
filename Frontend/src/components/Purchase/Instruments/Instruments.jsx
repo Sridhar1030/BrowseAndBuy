@@ -6,7 +6,7 @@ import Gcard from './Gcard';
 function Instruments() {
     return (
         <>
-            <Navbar/>
+            
             <div className='flex'>
                 <Menu/>
                 <div className='pl-72 mt-5 flex flex-col justify-center items-center'>

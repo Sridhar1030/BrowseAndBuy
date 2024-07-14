@@ -21,7 +21,6 @@ function Account() {
 
     return (
         <>
-            <Navbar />
             <div className="container mx-auto my-10 p-5">
                 <div className="bg-white shadow-xl rounded-lg p-6">
                     <div className="text-center mb-6">

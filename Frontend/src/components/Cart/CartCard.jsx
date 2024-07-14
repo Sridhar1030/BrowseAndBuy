@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Cloudinary } from "@cloudinary/url-gen";
 import { AdvancedImage } from '@cloudinary/react';
 import { fit } from "@cloudinary/url-gen/actions/resize";
 
-function CartCard({ data }) {
+function CartCard({ data, onRemove }) {
     const [quantity, setQuantity] = useState(data.quantity);
 
     const cld = new Cloudinary({
@@ -56,7 +56,8 @@ function CartCard({ data }) {
         try {
             const response = await axios.post('http://localhost:3000/cart/add-qty', {
                 userId: user._id,
-                Productid: Productid
+                id: Productid
+
             });
             console.log('POST request response:', response.data);
         } catch (error) {
@@ -64,9 +65,21 @@ function CartCard({ data }) {
         }
     };
 
-    useEffect(() => {
-        console.log("items are", data);
-    }, []); // Empty dependency array ensures this effect runs only once on mount
+    const handleRemove = async () => {
+        try {
+            const response = await axios.delete('http://localhost:3000/cart/remove-cart', {
+                data: {
+                    userId: user._id,
+                    id: Productid
+                }
+            });
+            console.log('POST request response:', response.data);
+            onRemove(Productid); // Update the parent component's state
+        } catch (error) {
+            console.error('Error making POST request:', error);
+        }
+    };
+
 
     return (
         <div className="w-96 mt-5 p-4 shadow-xl shadow-gray-200 bg-gray-50">
@@ -100,6 +113,9 @@ function CartCard({ data }) {
                     <div className="max-w-fit">
                         Total Price: {TotalPrice}
                     </div>
+                    <button className='text-red-500 text-base hover:text-lg' onClick={handleRemove}>
+                        Remove Item
+                    </button>
                 </div>
             </div>
         </div>

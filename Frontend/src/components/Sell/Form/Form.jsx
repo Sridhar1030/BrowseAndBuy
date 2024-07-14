@@ -18,7 +18,7 @@ function Form() {
 
     return (
         <>
-        <Navbar/>
+        
         <div className="h-full flex items-center justify-center bg-gray-400 ">
             <form className="max-w-md mx-auto p-4 bg-white rounded shadow-md mb-10" onSubmit={handleSubmit}>
                 <div className="mb-4">

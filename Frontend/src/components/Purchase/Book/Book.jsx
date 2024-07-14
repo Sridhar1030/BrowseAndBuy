@@ -40,7 +40,7 @@ function Book() {
 
     return (
         <>
-            <Navbar />
+
             <div className='flex'>
                 <Menu />
                 <div className='pl-72 mt-5 w-full'>
