@@ -3,26 +3,21 @@ import CartCard from "./CartCard";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useCartStore } from '../../../store/cartStore'
 
 const Cart = () => {
     const [data, setData] = useState([]); // Initialize data as an empty array
     const user = JSON.parse(localStorage.getItem("user"));
     const userId = user._id;
     console.log("user is ", user)
+    const getUserCart  = useCartStore(state => state.getUserCart);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/cart/get-user-cart`, {
-                    params: { userId }
-                });
-                console.log(userId)
-                if (Array.isArray(response.data.cartItems)) {
-                    setData(response.data.cartItems);
-                    console.log(response.data.cartItems)
-                } else {
-                    console.log("Expected an array but got: ", response.data);
-                }
+                const cartItems = await getUserCart();
+                setData(cartItems);
+                console.log(cartItems)
             } catch (err) {
                 console.log(err);
             }
@@ -31,7 +26,6 @@ const Cart = () => {
     }, []);
 
     const handleRemoveFromCart = (productId) => {
-        
         setData((prevData) => prevData.filter((item) => item.product.id !== productId));
     };
 

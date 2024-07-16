@@ -3,6 +3,11 @@ import { Cloudinary } from "@cloudinary/url-gen";
 import { AdvancedImage } from '@cloudinary/react';
 import { fit } from "@cloudinary/url-gen/actions/resize";
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useCartStore } from '../../../store/cartStore';
+
+
 
 function PurchaseCard({ book }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -26,11 +31,14 @@ function PurchaseCard({ book }) {
     const image = cld.image(currentImageId);
     image.resize(fit().width(500).height(750));
 
+
+    const  addCartItem  = useCartStore(state => state.addCartItem);
+
+
     const handleCart = async () => {
         console.log("cart button clicked");
         const token = localStorage.getItem('user');
-        const user = JSON.parse(token);
-        const userId = user._id;
+        
         const productData = {
             id: book._id,
             image: book.Image_ID,
@@ -39,19 +47,21 @@ function PurchaseCard({ book }) {
             price: book.price,
             quantity: 1
         };
-        const data = {
-            userId,
-            product: productData
-        };
-        console.log(data);
+        
+        console.log(productData);
 
-        const url = "http://localhost:3000/cart/add-cart";
 
         try {
-            const response = await axios.post(url, data);
-            console.log('Cart response:', response.data);
+            const response = await addCartItem(productData)
+            if (response.message == "exist") {
+                toast.warning("Item already exists");
+            } else {
+                toast.success("added to cart");
+            }
+
         } catch (error) {
             console.error('Error adding to cart:', error);
+            toast.error('Failed to add to cart');
         }
     };
 
@@ -75,6 +85,19 @@ function PurchaseCard({ book }) {
 
     return (
         <div className='card border rounded-lg shadow-lg p-6 m-4'>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={1000}
+                hideProgressBar={true}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable
+                pauseOnHover={false}
+                theme="dark"
+                transition: Zoom
+            />
             <div className='relative flex flex-col items-center'>
                 <div className='relative w-full flex justify-center items-center mb-4 size-56 m-10 overflow-clip'>
                     <AdvancedImage cldImg={image} className='rounded-lg' />
@@ -115,6 +138,7 @@ function PurchaseCard({ book }) {
                     </button>
                 </div>
             </div>
+
         </div>
     );
 }
