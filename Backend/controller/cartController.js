@@ -29,11 +29,7 @@ const addCart = async (req, res) => {
             );
 
             if (productExist !== -1) {
-                await cartModel.findOneAndUpdate(
-                    { user: userId, "cartItems.product.id": id },
-                    { $inc: { "cartItems.$.quantity": 1 } },
-                    { new: true }
-                );
+                return res.status(200).json({ message: "exist" });
             } else {
                 await cartModel.findOneAndUpdate(
                     { user: userId },
@@ -92,60 +88,60 @@ const removeCart = async (req, res) => {
 
 
 
-const addCartQty = async (req, res) => {
-    try {
-        const { userId, Productid } = req.body; // Correctly destructure userId and productId
-        console.log(req.body);
+// const addCartQty = async (req, res) => {
+//     try {
+//         const { userId, Productid } = req.body; // Correctly destructure userId and productId
+//         console.log(req.body);
 
-        const response = await cartModel.findOneAndUpdate(
-            { user: userId, "cartItems.product.id": Productid },
-            { $inc: { "cartItems.$.quantity": 1 } },
-            { new: true }
-        );
+//         const response = await cartModel.findOneAndUpdate(
+//             { user: userId, "cartItems.product.id": Productid },
+//             { $inc: { "cartItems.$.quantity": 1 } },
+//             { new: true }
+//         );
 
-        if (!response) {
-            res.status(404).json({ message: "Item not found" });
-            return;
-        }
+//         if (!response) {
+//             res.status(404).json({ message: "Item not found" });
+//             return;
+//         }
 
-        res.status(200).json({ message: "Added qty", updatedCart: response });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
-
-
+//         res.status(200).json({ message: "Added qty", updatedCart: response });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: "Internal Server Error" });
+//     }
+// };
 
 
 
 
 
 
-const decreaseCartQty = async (req, res) => {
-    try {
-        const { userId } = req.body;
-        const { Productid } = req.body;
-        console.log(Productid)
-        console.log(userId)
 
-        const response = await cartModel.findOneAndUpdate(
-            { user: userId, "cartItems.product.id": Productid },
-            { $inc: { "cartItems.$.quantity": -1 } },
-            { new: true }
-        );
 
-        if (!response) {
-            res.status(404).json({ message: "Item not found" });
-            return;
-        }
+// const decreaseCartQty = async (req, res) => {
+//     try {
+//         const { userId } = req.body;
+//         const { Productid } = req.body;
+//         console.log(Productid)
+//         console.log(userId)
 
-        res.status(200).json({ message: "Decreased qty" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
+//         const response = await cartModel.findOneAndUpdate(
+//             { user: userId, "cartItems.product.id": Productid },
+//             { $inc: { "cartItems.$.quantity": -1 } },
+//             { new: true }
+//         );
+
+//         if (!response) {
+//             res.status(404).json({ message: "Item not found" });
+//             return;
+//         }
+
+//         res.status(200).json({ message: "Decreased qty" });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: "Internal Server Error" });
+//     }
+// };
 
 
 
@@ -193,8 +189,8 @@ const getCartNumber = async (req, res) => {
 export {
     addCart,
     removeCart,
-    decreaseCartQty,
-    addCartQty,
+    // decreaseCartQty,
+    // addCartQty,
     getUserCart,
     getCartNumber,
 };
