@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
     refreshToken: {
         type: String,
     },
+    resetPasswordRequests: {
+        count: { type: Number, default: 0 },
+        lastRequest: { type: Date, default: null },
+    },
 });
 
 userSchema.pre("save", async function (next) {
@@ -64,6 +68,5 @@ userSchema.methods.generateRefreshToken = function () {
         }
     );
 };
-
 
 export const User = mongoose.model("User", userSchema);

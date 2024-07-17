@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 
 function Login() {
     const navigate = useNavigate();
@@ -23,7 +24,6 @@ function Login() {
                         res.data.data.accessToken
                     );
                     Cookies.set("accessToken", res.data.data.accessToken);
-
 
                     navigate("/home");
                 }
@@ -97,12 +97,20 @@ function Login() {
                     Log In
                 </button>
                 <p className="mt-2">Do not have an account?</p>
-                <a
-                    href="/signup"
+                <Link
+                    to="/signup"
                     className="text-blue-500 hover:underline flex"
                 >
                     Register
-                </a>
+                </Link>
+                <div className="mt-4">
+                <Link
+                    to="/forgot-password"
+                    className="text-blue-500 hover:underline"
+                >
+                    Forgot Password?
+                </Link>
+                </div>
             </div>
         </div>
     );

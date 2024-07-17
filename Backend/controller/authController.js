@@ -203,24 +203,28 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-        const error = new ApiError(404, "We could not find the email");
-        next(error);
+        return next(new ApiError(404, "We could not find the email"));
     }
 
-    const secret = process.env.ACCESS_TOKEN_SECRET + user.password;
+    const now = new Date();
+    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-    const token = jwt.sign(
-        {
-            email,
-            _id: req.body._id,
-        },
-        secret,
-        {
-            expiresIn: "5m",
+    if (user.resetPasswordRequests.lastRequest && user.resetPasswordRequests.lastRequest > oneDayAgo) {
+        if (user.resetPasswordRequests.count >= 5) {
+            return next(new ApiError(429, "You have exceeded the maximum number of reset requests for today. Please try again tomorrow."));
         }
-    );
+    } else {
+        user.resetPasswordRequests.count = 0;
+    }
 
-    const link = `http://localhost:3000/auth/reset-password/${user._id}/${token}`;
+    user.resetPasswordRequests.count += 1;
+    user.resetPasswordRequests.lastRequest = now;
+    await user.save();
+
+    const secret = process.env.ACCESS_TOKEN_SECRET + user.password;
+    const token = jwt.sign({ email, _id: user._id }, secret, { expiresIn: "5m" });
+    const link = `http://localhost:5173/reset-password/${user._id}/${token}`;
+
     sendEmail(link, email)
         .then((data) => {
             console.log(data);
@@ -229,55 +233,65 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
             console.log(error);
         });
 
-    return res.json(new ApiResponse(200, "link is create", {}));
+    return res.json(new ApiResponse(200, "Link has been sent to your email", {}));
 });
 
-const resetPassword = asyncHandler(async (req, res) => {
+
+const resetPassword = asyncHandler(async (req, res, next) => {
     const { id, token } = req.params;
     const { newPassword, confirmPassword } = req.body;
 
-    const user = await User.findOne({ _id: id });
+    try {
+        const user = await User.findOne({ _id: id });
 
-    if (!user) {
-        const error = new ApiError(404, "We could not find the email");
-        next(error);
-    }
+        if (!user) {
+            const error = new ApiError(404, "User not found");
+            return next(error);
+        }
 
-    const secret = process.env.ACCESS_TOKEN_SECRET + user.password;
+        const secret = process.env.ACCESS_TOKEN_SECRET + user.password;
 
-    const verfiy = jwt.verify(token, secret);
+        let verified;
+        try {
+            verified = jwt.verify(token, secret);
+        } catch (err) {
+            throw new ApiError(401, "Token is invalid");
+        }
 
-    if (!verfiy) {
-        throw new ApiError(401, "Token is invalid");
-    }
-    if (newPassword !== confirmPassword) {
-        throw new ApiError(400, "Password must be same");
-    }
+        if (newPassword !== confirmPassword) {
+            throw new ApiError(400, "Passwords do not match");
+        }
 
-    const encryptedPassword = await bcrypt.hash(confirmPassword, 10);
+        const encryptedPassword = await bcrypt.hash(confirmPassword, 10);
 
-    await User.findOneAndUpdate(
-        verfiy.email,
-        {
-            $set: {
-                password: encryptedPassword,
+        await User.findOneAndUpdate(
+            { _id: id },
+            {
+                $set: {
+                    password: encryptedPassword,
+                },
             },
-        },
-        { new: true }
-    ).select("-password");
+            { new: true }
+        );
 
-    return res.json(new ApiResponse(200, "Password is updated", {}));
+        return res.json(
+            new ApiResponse(200, "Password updated successfully", {})
+        );
+    } catch (error) {
+        console.error("Error resetting password:", error); 
+        return next(new ApiError(500, "Internal Server Error"));
+    }
 });
 
-const deleteAccount = asyncHandler(async (req,res)=>{
-    const deleteUser = await User.findByIdAndDelete(req.user?._id)
+const deleteAccount = asyncHandler(async (req, res) => {
+    const deleteUser = await User.findByIdAndDelete(req.user?._id);
 
-    if(!deleteUser){
-        throw new ApiError(404,"User not found")
+    if (!deleteUser) {
+        throw new ApiError(404, "User not found");
     }
-    
-    return res.json(new ApiResponse(200,"User is deleted",{}))
-})
+
+    return res.json(new ApiResponse(200, "User is deleted", {}));
+});
 
 export {
     generateAccessAndRefreshToken,

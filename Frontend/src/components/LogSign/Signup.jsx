@@ -1,6 +1,7 @@
 // src/Signup.js
 import { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -116,7 +117,7 @@ const Signup = () => {
                 {message && <p className="mt-4 text-green-500">{message}</p>}
                 {error && <p className="mt-4 text-red-300 ">{error}</p>}
                 <p className="mt-4">
-                    Already have an account? <a href="/" className="text-blue-500 hover:underline">Login</a>
+                    Already have an account? <Link to="/" className="text-blue-500 hover:underline">Login</Link>
                 </p>
             </div>
         </div>

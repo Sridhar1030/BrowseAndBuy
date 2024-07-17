@@ -15,6 +15,8 @@ import AdminImages from "./components/Sell/AdminImages";
 import Labcoats from "./components/Purchase/Labcoats/Labcoats";
 import Cart from "./components/Cart/Cart";
 import { ChatPage } from "./components/Chat/ChatPage";
+import ForgotPassword from "./components/LogSign/ForgotPassword";
+import ResetPassword from "./components/LogSign/ResetPassword";
 
 function App() {
     return (
@@ -23,7 +25,8 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
-
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/reset-password/:id/:token" element={<ResetPassword />} />
                     <Route
                         path="/home"
                         element={<ProtectedRoute element={<Home />} />}
