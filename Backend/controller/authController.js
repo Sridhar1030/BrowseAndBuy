@@ -3,6 +3,9 @@ import { User } from "../models/User.js";
 import { ApiError } from "../utils.js/ApiErrorHandler.js";
 import { asyncHandler } from "../utils.js/asyncHandler.js";
 import { ApiResponse } from "../utils.js/ApiResponse.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import { sendEmail } from "../utils.js/sendmail.js";
 
 const generateAccessAndRefreshToken = async (userId) => {
     try {
@@ -106,15 +109,12 @@ const login = asyncHandler(async (req, res) => {
         );
 });
 
-const chatData = asyncHandler(async (req, res) => {
-    return res
-        .status(201)
-        .json(
-            new ApiResponse(201, "chat detail is fetch", {
-                user: req.user,
-                chat: req.chat,
-            })
-        );
+const userData = asyncHandler(async (req, res) => {
+    return res.status(201).json(
+        new ApiResponse(201, "chat detail is fetch", {
+            user: req.user,
+        })
+    );
 });
 
 const logout = asyncHandler(async (req, res) => {
@@ -166,11 +166,119 @@ const changePassword = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, "Password is updated", {}));
 });
 
+const updateUserDetail = asyncHandler(async (req, res) => {
+    const { username, fullName } = req.body;
+
+    if (!username || !fullName) {
+        throw new ApiError(400, "All fields are required");
+    }
+
+    const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set: {
+                username,
+                fullName,
+            },
+        },
+        {
+            new: true,
+        }
+    ).select("-password");
+
+    console.log(user);
+
+    if (!user) {
+        throw new ApiError(400, "User not found");
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, "User detail is updated", { user }));
+});
+
+const forgotPassword = asyncHandler(async (req, res, next) => {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+        const error = new ApiError(404, "We could not find the email");
+        next(error);
+    }
+
+    const secret = process.env.ACCESS_TOKEN_SECRET + user.password;
+
+    const token = jwt.sign(
+        {
+            email,
+            _id: req.body._id,
+        },
+        secret,
+        {
+            expiresIn: "5m",
+        }
+    );
+
+    const link = `http://localhost:3000/auth/reset-password/${user._id}/${token}`;
+    sendEmail(link, email)
+        .then((data) => {
+            console.log(data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+
+    return res.json(new ApiResponse(200, "link is create", {}));
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+    const { id, token } = req.params;
+    const { newPassword, confirmPassword } = req.body;
+
+    const user = await User.findOne({ _id: id });
+
+    if (!user) {
+        const error = new ApiError(404, "We could not find the email");
+        next(error);
+    }
+
+    const secret = process.env.ACCESS_TOKEN_SECRET + user.password;
+
+    const verfiy = jwt.verify(token, secret);
+
+    if (!verfiy) {
+        throw new ApiError(401, "Token is invalid");
+    }
+    if (newPassword !== confirmPassword) {
+        throw new ApiError(400, "Password must be same");
+    }
+
+    const encryptedPassword = await bcrypt.hash(confirmPassword, 10);
+
+    await User.findOneAndUpdate(
+        verfiy.email,
+        {
+            $set: {
+                password: encryptedPassword,
+            },
+        },
+        { new: true }
+    ).select("-password");
+
+    return res.json(new ApiResponse(200, "Password is updated", {}));
+});
+
+
+
 export {
     generateAccessAndRefreshToken,
     login,
     signup,
     logout,
-    chatData,
+    userData,
     changePassword,
+    updateUserDetail,
+    forgotPassword,
+    resetPassword,
 };

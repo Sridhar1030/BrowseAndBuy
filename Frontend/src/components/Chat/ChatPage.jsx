@@ -1,43 +1,41 @@
 import React, { useEffect } from "react";
 import axios from "axios";
-import {
-    MultiChatSocket,
-    MultiChatWindow,
-    useMultiChatLogic,
-} from "react-chat-engine-advanced";
-import { PrettyChatWindow } from 'react-chat-engine-pretty';
-
+import Cookies from "js-cookie";    
 
 export function ChatPage() {
-    const user = localStorage.getItem("user");
+    const [data, setData] = React.useState({});
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const res = await axios.get("http://localhost:3000/auth/chat");
-    //             console.log(res.data);
-    //         } catch (error) {
-    //             console.log("CHAT ERROR");
-    //         }
-    //     }
-    //     fetchData()
-    // }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(
+                    "http://localhost:3000/auth/userData",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                        },
+                    }
+                );
+                setData(res.data.data);
+            } catch (error) {
+                console.log("CHAT ERROR", error);
+            }
+        };
+        fetchData();
+    }, []);
 
-    // const chatProps = useMultiChatLogic(
-    //     "b0b2185b-7f85-4d90-9d57-ff445fa30162",
-    //     user,
-    //     user
-    // );
+
+    useEffect(() => {
+        if (data.user) {
+            console.log(data)
+            console.log("data0", data.user.username);
+        }
+    }, [data]);
+
+
     return (
-        <div style={{ height: "100vh" }}>
-            {/* <MultiChatSocket {...chatProps} />
-            <MultiChatWindow {...chatProps} style={{ height: "100%" }} /> */}
-            <PrettyChatWindow
-                projectId="b0b2185b-7f85-4d90-9d57-ff445fa30162"
-                username={user}
-                secret={user}
-                style={{ height: "100vh" }}
-            />
-        </div>
+        <>
+            <h1>Chat Page</h1>
+        </>
     );
 }

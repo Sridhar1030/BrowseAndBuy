@@ -1,5 +1,5 @@
 import { ApiError } from "../utils.js/ApiErrorHandler.js";
-import {asyncHandler} from "../utils.js/asyncHandler.js";
+import { asyncHandler } from "../utils.js/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User.js";
 
@@ -30,4 +30,4 @@ const verifyJwt = asyncHandler(async (req, res, next) => {
     }
 });
 
-export default verifyJwt ; // Ensure correct export
+export default verifyJwt;
