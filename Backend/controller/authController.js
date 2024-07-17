@@ -6,6 +6,7 @@ import { ApiResponse } from "../utils.js/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { sendEmail } from "../utils.js/sendmail.js";
+import validator from "email-validator"
 
 const generateAccessAndRefreshToken = async (userId) => {
     try {
@@ -32,6 +33,12 @@ const signup = asyncHandler(async (req, res) => {
         )
     ) {
         return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const isValid = validator.validate(email);
+
+    if (!isValid) {
+        return res.status(400).json({ message: "Email is not valid" });
     }
 
     const userExists = await User.findOne({
