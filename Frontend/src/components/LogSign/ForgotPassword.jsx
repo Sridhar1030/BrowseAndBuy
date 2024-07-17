@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -6,6 +6,9 @@ function ForgotPassword() {
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
+    const [isAutoResendEnabled, setIsAutoResendEnabled] = useState(false);
+    const [countdown, setCountdown] = useState(10);
+    const [autoResendInterval, setAutoResendInterval] = useState(null);
 
     const handleChange = (e) => {
         setEmail(e.target.value);
@@ -15,6 +18,9 @@ function ForgotPassword() {
         e.preventDefault();
         setMessage("");
         setError("");
+        setIsAutoResendEnabled(true);
+        setCountdown(10);
+        clearInterval(autoResendInterval); // Clear any existing interval
 
         try {
             const response = await axios.post(
@@ -24,13 +30,11 @@ function ForgotPassword() {
             if (response.status === 200) {
                 setMessage("Password reset link sent to your email.");
             }
-            
         } catch (error) {
-            if (
-                error.response &&
-                error.response.status === 429
-            ) {
-                setError("You have exceeded the maximum number of reset requests for today. Please try again tomorrow.");
+            if (error.response && error.response.status === 429) {
+                setError(
+                    "You have exceeded the maximum number of reset requests for today. Please try again tomorrow."
+                );
             } else if (
                 error.response &&
                 error.response.data &&
@@ -42,6 +46,23 @@ function ForgotPassword() {
             }
         }
     };
+
+    useEffect(() => {
+        if (isAutoResendEnabled) {
+            const interval = setInterval(() => {
+                setCountdown((prev) => {
+                    if (prev === 1) {
+                        setIsAutoResendEnabled(false);
+                        clearInterval(interval);
+                        return 10;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+            setAutoResendInterval(interval);
+        }
+        return () => clearInterval(autoResendInterval);
+    }, [isAutoResendEnabled]);
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -65,12 +86,22 @@ function ForgotPassword() {
                             placeholder="Enter your email"
                         />
                     </div>
-                    <button
-                        type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
-                        Reset Password
-                    </button>
+                    {isAutoResendEnabled ? (
+                        <button
+                            type="submit"
+                            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400"
+                            disabled
+                        >
+                            Resend in {countdown}s
+                        </button>
+                    ) : (
+                        <button
+                            type="submit"
+                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        >
+                            Sumbit
+                        </button>
+                    )}
                 </form>
                 {message && <p className="mt-4 text-green-500">{message}</p>}
                 {error && <p className="mt-4 text-red-500">{error}</p>}
