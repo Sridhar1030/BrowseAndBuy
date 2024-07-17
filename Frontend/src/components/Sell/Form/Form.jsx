@@ -43,7 +43,7 @@ function Form() {
                         <option value="EngineeringBooks">Engineering Books</option>
                         <option value="Labcoats">Labcoats</option>
                         <option value="PYQS">PYQS</option>
-                        <option value="Graphics Instruments">Graphics Instruments</option>
+                        <option value="GraphicsInstruments">Graphics Instruments</option>
                         <option value="Stationary">Stationary</option>
                         <option value="Others">Others</option>
                     </select>
