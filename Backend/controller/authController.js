@@ -269,7 +269,15 @@ const resetPassword = asyncHandler(async (req, res) => {
     return res.json(new ApiResponse(200, "Password is updated", {}));
 });
 
+const deleteAccount = asyncHandler(async (req,res)=>{
+    const deleteUser = await User.findByIdAndDelete(req.user?._id)
 
+    if(!deleteUser){
+        throw new ApiError(404,"User not found")
+    }
+    
+    return res.json(new ApiResponse(200,"User is deleted",{}))
+})
 
 export {
     generateAccessAndRefreshToken,
@@ -281,4 +289,5 @@ export {
     updateUserDetail,
     forgotPassword,
     resetPassword,
+    deleteAccount,
 };
