@@ -1,36 +1,50 @@
-// models/User.js
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true,
-        trim: true,
-        index: true,
+const userSchema = new mongoose.Schema(
+    {
+        username: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true,
+            index: true,
+        },
+        password: {
+            type: String,
+            required: [true, "password is required"],
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true,
+        },
+        refreshToken: {
+            type: String,
+        },
+        resetPasswordRequests: {
+            count: { type: Number, default: 0 },
+            lastRequest: { type: Date, default: null },
+        },
+        isAdmin: {
+            type: Boolean,
+            default: false,
+        },
+        ProductId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Product",
+        },
+        BoughtProductId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Product",
+        },
     },
-    password: {
-        type: String,
-        required: [true, "password is  required"],
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true,
-        trim: true,
-    },
-    refreshToken: {
-        type: String,
-    },
-    resetPasswordRequests: {
-        count: { type: Number, default: 0 },
-        lastRequest: { type: Date, default: null },
-    },
-},{timestamps: true});
+    { timestamps: true }
+);
 
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
@@ -70,3 +84,4 @@ userSchema.methods.generateRefreshToken = function () {
 };
 
 export const User = mongoose.model("User", userSchema);
+export default User;

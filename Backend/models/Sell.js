@@ -1,4 +1,3 @@
-// models/Sell.js
 import { Schema, model } from "mongoose";
 const sellSchema = new Schema({
 	F_Name: String,

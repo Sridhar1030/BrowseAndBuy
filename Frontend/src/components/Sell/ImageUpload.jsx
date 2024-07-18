@@ -45,7 +45,7 @@ function ImageUpload() {
 
   const sellToBackend = async () => {
     try {
-      // Check if formData is available
+      // console.log("the product id is " , Product)
       if (!formData) {
         alert("Form data is not available. Please upload images first.");
         return;
@@ -59,6 +59,8 @@ function ImageUpload() {
       }
 
       const url = "http://localhost:3000/sell";
+      const user = JSON.parse(localStorage.getItem("user"));
+      const userId = user ? user._id : null;
 
       // Create data object for form fields
       const data = {
@@ -69,13 +71,16 @@ function ImageUpload() {
         phone: formData.phone || '',
         F_Name: formData.F_Name || '',
         L_Name: formData.L_Name || '',
-        Image_ID: formData.Image_ID.join(',') || '123'
+        Image_ID: formData.Image_ID.join(',') || '123',
+        userId: userId
       };
 
       // Example of sending formData to /sell endpoint
       const response = await axios.post(url, data);
 
       console.log('Response from backend:', response.data);
+      const ProductId = response.data.newSell._id;
+      console.log("the product is is ", ProductId)
       alert("Form data has been successfully uploaded to /sell endpoint");
 
       // Handle success logic here if needed
@@ -148,7 +153,7 @@ function ImageUpload() {
 
   return (
     <div className='bg-gray-400 flex flex-col min-h-screen'>
-      
+
       <div className='flex flex-col items-center justify-center'>
         {!accepted && (
           <div className="bg-red-500 text-white text-sm font-bold px-4 py-3">

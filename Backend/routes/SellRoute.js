@@ -1,5 +1,7 @@
 import express from 'express';
-import Sell from '../models/Sell.js'
+import Sell from '../models/Sell.js';
+import User from '../models/User.js'; // Correct import statement
+
 const router = express.Router();
 
 router.post("/", async (req, res) => {
@@ -19,6 +21,8 @@ router.post("/", async (req, res) => {
 
     try {
         const savedItem = await newSell.save();
+        const userId = req.body.userId;
+        await User.findByIdAndUpdate(userId, { $push: { ProductId: savedItem._id } });
         console.log("New Sell Item Saved:", savedItem);
         res.status(200).json({
             message: "Saved successfully",
