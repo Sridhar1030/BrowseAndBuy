@@ -32,7 +32,8 @@ const sendEmail = async (Link, recipient_email) => {
             <body>
             <p>Dear user,</p>
             <p>You have requested a password reset. Please click the link below to reset your password:</p>
-            <a href="${Link}">${Link}</a>
+            <a href="${Link}">Click here to Reset Password</a>
+            
             <p>If you did not request this, please secure your account immediately as someone may be attempting to gain unauthorized access.</p>
             <p>Thank you,</p>
             <p>B&B</p>

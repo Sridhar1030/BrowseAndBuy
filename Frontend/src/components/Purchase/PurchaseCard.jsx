@@ -37,7 +37,7 @@ function PurchaseCard({ book }) {
 
     const handleCart = async () => {
         console.log("cart button clicked");
-        const token = localStorage.getItem('user');
+        // const token = localStorage.getItem('user');
         
         const productData = {
             id: book._id,
