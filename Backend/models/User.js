@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
         count: { type: Number, default: 0 },
         lastRequest: { type: Date, default: null },
     },
-});
+},{timestamps: true});
 
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
