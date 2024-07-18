@@ -14,9 +14,11 @@ function Login() {
         const url = "http://localhost:3000/auth/login";
         const data =
             email !== "" ? { email, password } : { username, password };
+        
 
         try {
             const res = await axios.post(url, data);
+            const user = res.data.data.user
             if (res.status === 201) {
                 console.log(res)
                 if (res.data.data.accessToken && res.data.data.refreshToken) {
@@ -24,6 +26,7 @@ function Login() {
                         "accessToken",
                         res.data.data.accessToken
                     );
+                    localStorage.setItem('user', JSON.stringify(user));
                     Cookies.set("accessToken", res.data.data.accessToken);
 
                     navigate("/home");

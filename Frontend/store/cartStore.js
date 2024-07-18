@@ -12,6 +12,7 @@ export const useCartStore = create((set, get) => ({
 
 	fetchCartNumber: async () => {
 		try {
+			// console.log(userId)
 			const response = await axios.get(`${baseURL}/cart/get-user-cart-number`, {
 				params: { userId },
 			});
