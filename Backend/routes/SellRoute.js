@@ -17,6 +17,7 @@ router.post("/", async (req, res) => {
         L_Name: req.body.L_Name,
         Image_ID: req.body.Image_ID,
         Approved: req.body.Approved !== undefined ? req.body.Approved : false,
+        UserId: req.body.userId,
     });
 
     try {

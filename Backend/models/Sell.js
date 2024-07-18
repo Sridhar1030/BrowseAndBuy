@@ -9,6 +9,7 @@ const sellSchema = new Schema({
 	price: Number,
 	semester: Number,
 	Approved: { type: Boolean, default: false },
+	UserId:String
 },{timestamps: true});
 
 const Sell = model("Sell", sellSchema);

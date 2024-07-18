@@ -32,13 +32,13 @@ function PurchaseCard({ book }) {
     image.resize(fit().width(500).height(750));
 
 
-    const  addCartItem  = useCartStore(state => state.addCartItem);
+    const addCartItem = useCartStore(state => state.addCartItem);
 
 
     const handleCart = async () => {
         console.log("cart button clicked");
         // const token = localStorage.getItem('user');
-        
+
         const productData = {
             id: book._id,
             image: book.Image_ID,
@@ -47,7 +47,7 @@ function PurchaseCard({ book }) {
             price: book.price,
             quantity: 1
         };
-        
+
         console.log(productData);
 
 
@@ -65,7 +65,7 @@ function PurchaseCard({ book }) {
         }
     };
 
-    const handleBuy = () => {
+    const handleBuy = async () => {
         console.log("buy button clicked");
         const token = localStorage.getItem('user');
         console.log(token);
@@ -74,7 +74,26 @@ function PurchaseCard({ book }) {
             try {
                 const user = JSON.parse(token);
                 const userId = user._id;
+                const sellerId = book.UserId;
                 console.log(userId, "wants to buy");
+                console.log(sellerId, "is the seller");
+                try {
+                    const response = await axios.post('http://localhost:3000/notify-seller', {
+                        buyerId: userId,
+                        sellerId: sellerId,
+                        itemId: book._id,
+                        itemName: book.Item_Name
+                    });
+
+                    if (response.data.success) {
+                        toast.success("Notification sent to the seller");
+                    } else {
+                        toast.error("Failed to send notification");
+                    }
+                } catch (error) {
+                    console.log("Failed to send notification:", error);
+                    toast.error("Failed to send notification");
+                }
             } catch (error) {
                 console.log("Failed to decode token:", error);
             }
@@ -96,7 +115,7 @@ function PurchaseCard({ book }) {
                 draggable
                 pauseOnHover={false}
                 theme="dark"
-                transition: Zoom
+                transition:Zoom
             />
             <div className='relative flex flex-col items-center'>
                 <div className='relative w-full flex justify-center items-center mb-4 size-56 m-10 overflow-clip'>
