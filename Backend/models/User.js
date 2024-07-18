@@ -26,13 +26,16 @@ const userSchema = new mongoose.Schema({
     refreshToken: {
         type: String,
     },
+    resetPasswordRequests: {
+        count: { type: Number, default: 0 },
+        lastRequest: { type: Date, default: null },
+    },
 });
-
 
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
 
-    this.password = await bcrypt.hash(this.password, 1);
+    this.password = await bcrypt.hash(this.password, 10);
     next();
 });
 

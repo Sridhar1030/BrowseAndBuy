@@ -1,7 +1,8 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import Home from './components/Home/Home';
+import { useState, useEffect } from 'react';
+
 import Purchase from './components/Purchase/Purchase';
 import Order from './components/Order/Order';
 import ImageUpload from './components/Sell/ImageUpload';
@@ -15,13 +16,12 @@ import ProtectedRoute from './components/ProtectedRoute';  // Import the Protect
 import AdminImages from './components/Sell/AdminImages';
 import Labcoats from './components/Purchase/Labcoats/Labcoats';
 import Cart from './components/Cart/Cart';
-import Navbar from './components/Navbar/Navbar';
 
 function App() {
   return (
     <>
       <Router>
-        <Navbar  />
+      <Navbar  />
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -36,7 +36,7 @@ function App() {
           <Route path="/purchase/instruments" element={<ProtectedRoute element={<Instruments />} />} />
           <Route path="/purchase/labcoats" element={<ProtectedRoute element={<Labcoats />} />} />
           <Route path="/form" element={<ProtectedRoute element={<Form />} />} />
-          <Route path="/cart" element={<ProtectedRoute element={<Cart />} />} />
+          <Route path="/cart" element={<ProtectedRoute element={<Cart/>} />} />
 
         </Routes>
       </Router>
