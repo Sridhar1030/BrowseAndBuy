@@ -17,7 +17,7 @@ import sellRoute from "./routes/SellRoute.js";
 import authRouter from "./routes/AuthRoute.js";
 import itemsRouter from "./routes/items.js";
 import CartRoute from "./routes/CartRoute.js"
-
+import UploadedItems from "./routes/UploadedItems.js"
 
 // Middleware
 app.use(cors());
@@ -31,7 +31,7 @@ app.use("/api/users", userRoute); // Use userRoute imported with require
 app.use("/auth", authRouter);
 app.use("/api", itemsRouter);
 app.use("/cart/",CartRoute)
-
+app.use("/api" , UploadedItems)
 // Example route
 app.get("/", (req, res) => {
     res.send("Hello World!");

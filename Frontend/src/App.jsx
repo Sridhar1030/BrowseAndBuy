@@ -19,6 +19,7 @@ import Navbar from "./components/Navbar/Navbar";
 import { ChatPage } from "./components/Chat/ChatPage";
 import ForgotPassword from "./components/LogSign/ForgotPassword";
 import ResetPassword from "./components/LogSign/ResetPassword";
+import YourItems from "./components/YourItems/YourItems";
 
 function App() {
   return (
@@ -77,6 +78,10 @@ function App() {
           <Route
             path="/cart"
             element={<ProtectedRoute element={<Cart />} />}
+          />
+          <Route
+            path="/selling"
+            element={<ProtectedRoute element={<YourItems />} />}
           />
         </Routes>
       </Router>

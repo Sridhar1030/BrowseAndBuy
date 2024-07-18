@@ -79,8 +79,8 @@ function ImageUpload() {
       const response = await axios.post(url, data);
 
       console.log('Response from backend:', response.data);
-      const ProductId = response.data.newSell._id;
-      console.log("the product is is ", ProductId)
+      // const ProductId = response.data.newSell._id;
+      // console.log("the product is is ", ProductId)
       alert("Form data has been successfully uploaded to /sell endpoint");
 
       // Handle success logic here if needed

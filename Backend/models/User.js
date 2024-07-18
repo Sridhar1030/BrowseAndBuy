@@ -34,14 +34,14 @@ const userSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
-        ProductId: {
+        ProductId: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Product",
-        },
-        BoughtProductId: {
+        }],
+        BoughtProductId: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Product",
-        },
+        }],
     },
     { timestamps: true }
 );

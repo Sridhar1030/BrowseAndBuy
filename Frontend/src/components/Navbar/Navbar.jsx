@@ -25,6 +25,7 @@ function Navbar() {
                         <button><Link to="/purchase">Purchase</Link></button>
                         <button><Link to="/form">Sell</Link></button>
                         <button><Link to="/orders">Your orders</Link></button>
+                        <button><Link to="/selling">Your Items</Link></button>
                         <button>
                             <Link to="/account" className='flex justify-center align-middle'>
                                 <img className='mr-2 size-5 flexjustify-center' src={profileSvg} alt="" />
