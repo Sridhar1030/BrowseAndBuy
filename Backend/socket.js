@@ -51,7 +51,7 @@ const setupSocket = (server) => {
             if (receiver && receiver.socketId) {
                 io.to(receiver.socketId).emit("getNotification", {
                     senderName,
-                    receiver
+                    receiverName
                 });
                 console.log(senderName)
                 console.log(receiver.socketId)
