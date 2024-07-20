@@ -1,15 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import profileSvg from '../../assets/profile.svg';
-import CartNumber from './CartNumber'; // Adjust the import path as necessary
+import CartNumber from './CartNumber';
+import Notification from '../../assets/notification.svg';
+import { useSocket } from '../../contexts/SocketContext';
 
-function Navbar() {
+function Navbar({socket}) {
+    // const socket = useSocket();
+    console.log(socket)
     const navigate = useNavigate();
+
+    const [notifications, setNotifications] = useState([]);
 
     const handleLogout = () => {
         localStorage.clear();
         navigate('/');
     };
+
+    useEffect(() => {
+
+        socket?.on("getNotification", data => {
+            setNotifications(prev => [...prev, data])
+        })
+    }, [socket])
+
+    console.log("notification is ", notifications)
 
     return (
         <nav className="sticky top-0 bg-slate-500 text-xl flex justify-between z-50">
@@ -35,7 +50,14 @@ function Navbar() {
                     </div>
                 </div>
             </div>
-            <div className='mx-5 flex items-center gap-10'>
+            <div className='mx-5 flex justify-center align-middle items-center gap-10'>
+                <div>
+                    <img
+                        src={Notification}
+                        className='size-6 flex justify-center cursor-pointer hover:animate-ring'
+                        alt=""
+                    />
+                </div>
                 <button>
                     <CartNumber />
                     <Link to="/cart" className='flex justify-center align-middle gap-4'>

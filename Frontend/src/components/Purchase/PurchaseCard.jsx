@@ -6,11 +6,14 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useCartStore } from '../../../store/cartStore';
+import { useSocket } from '../../contexts/SocketContext'; // Import useSocket
 
 
 
 function PurchaseCard({ book }) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const socket = useSocket();
+    const user = JSON.parse(localStorage.getItem("user"));
     const cld = new Cloudinary({
         cloud: {
             cloudName: 'sridhar1'
@@ -66,40 +69,12 @@ function PurchaseCard({ book }) {
     };
 
     const handleBuy = async () => {
-        console.log("buy button clicked");
-        const token = localStorage.getItem('user');
-        console.log(token);
-
-        if (token) {
-            try {
-                const user = JSON.parse(token);
-                const userId = user._id;
-                const sellerId = book.UserId;
-                console.log(userId, "wants to buy");
-                console.log(sellerId, "is the seller");
-                try {
-                    const response = await axios.post('http://localhost:3000/notify-seller', {
-                        buyerId: userId,
-                        sellerId: sellerId,
-                        itemId: book._id,
-                        itemName: book.Item_Name
-                    });
-
-                    if (response.data.success) {
-                        toast.success("Notification sent to the seller");
-                    } else {
-                        toast.error("Failed to send notification");
-                    }
-                } catch (error) {
-                    console.log("Failed to send notification:", error);
-                    toast.error("Failed to send notification");
-                }
-            } catch (error) {
-                console.log("Failed to decode token:", error);
-            }
-        } else {
-            console.log("No token found in localStorage");
-        }
+        socket.emit("sendNotification", {
+            senderName: user.username,
+            receiverName: book.F_Name,
+            
+        })
+        
     };
 
     return (

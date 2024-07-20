@@ -20,12 +20,30 @@ import { ChatPage } from "./components/Chat/ChatPage";
 import ForgotPassword from "./components/LogSign/ForgotPassword";
 import ResetPassword from "./components/LogSign/ResetPassword";
 import YourItems from "./components/YourItems/YourItems";
+import { io } from "socket.io-client";
+import { SocketProvider } from "./contexts/SocketContext";
 
 function App() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:5000");
+    setSocket(newSocket);
+    return () => newSocket.close(); // Clean up the socket connection on unmount
+  }, []);
+
+  useEffect(() => {
+    if (socket && user) {
+      socket.emit("newUser", user);
+    }
+  }, [socket, user]);
+  console.log("socket provider is " , SocketProvider)
+
   return (
-    <>
-      <Router>
-        <Navbar />
+    <Router>
+      <Navbar socket={socket} />
+        <SocketProvider >
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -74,18 +92,19 @@ function App() {
           <Route
             path="/form"
             element={<ProtectedRoute element={<Form />} />}
-          />
+            />
           <Route
             path="/cart"
             element={<ProtectedRoute element={<Cart />} />}
-          />
+            />
           <Route
             path="/selling"
             element={<ProtectedRoute element={<YourItems />} />}
-          />
+            />
         </Routes>
+    
+            </SocketProvider>
       </Router>
-    </>
   );
 }
 
