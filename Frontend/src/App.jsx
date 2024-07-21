@@ -25,6 +25,7 @@ import { SocketProvider } from "./contexts/SocketContext";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user._id
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
@@ -35,14 +36,17 @@ function App() {
 
   useEffect(() => {
     if (socket && user) {
-      socket.emit("newUser", user);
+      socket.emit("newUser", userId);
     }
   }, [socket, user]);
+
+
+
   console.log("socket provider is " , SocketProvider)
 
   return (
     <Router>
-      <Navbar socket={socket} />
+      <Navbar socket={socket} user={userId} />
         <SocketProvider >
         <Routes>
           <Route path="/" element={<Login />} />
