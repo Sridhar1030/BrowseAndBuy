@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
-const MessageSchema = new mongoose.model(
+const MessageSchema = new mongoose.Schema(
     {
-        chatID: {
+        chatId: {
             type: String,
         },
-        senderID: {
+        senderId: {
             type: String,
         },
         text: {

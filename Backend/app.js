@@ -19,6 +19,7 @@ import itemsRouter from "./routes/items.js";
 import CartRoute from "./routes/CartRoute.js"
 import UploadedItems from "./routes/UploadedItems.js"
 import chatRoute from "./routes/ChatRoute.js"
+import messageRoute from "./routes/messageRoute.js"
 
 // Middleware
 app.use(cors());
@@ -34,6 +35,8 @@ app.use("/api", itemsRouter);
 app.use("/cart/",CartRoute)
 app.use("/api" , UploadedItems)
 app.use("/chat",chatRoute)
+app.use("/message",messageRoute)
+
 // Example route
 app.get("/", (req, res) => {
     res.send("Hello World!");
