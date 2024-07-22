@@ -11,12 +11,12 @@ import Instruments from "./components/Purchase/Instruments/Instruments";
 import Form from "./components/Sell/Form/Form";
 import Login from "./components/LogSign/Login";
 import Signup from "./components/LogSign/Signup";
-import ProtectedRoute from "./components/ProtectedRoute"; // Import the ProtectedRoute component
+import ProtectedRoute from "./components/ProtectedRoute";
 import AdminImages from "./components/Sell/AdminImages";
 import Labcoats from "./components/Purchase/Labcoats/Labcoats";
 import Cart from "./components/Cart/Cart";
 import Navbar from "./components/Navbar/Navbar";
-import { ChatPage } from "./components/Chat/ChatPage";
+import Chat from "./components/Chat/Chat";
 import ForgotPassword from "./components/LogSign/ForgotPassword";
 import ResetPassword from "./components/LogSign/ResetPassword";
 import YourItems from "./components/YourItems/YourItems";
@@ -37,7 +37,7 @@ function App() {
           />
           <Route
             path="/chat"
-            element={<ProtectedRoute element={<ChatPage />} />}
+            element={<ProtectedRoute element={<Chat />} />}
           />
           <Route
             path="/AdminImages"
