@@ -18,6 +18,7 @@ import authRouter from "./routes/AuthRoute.js";
 import itemsRouter from "./routes/items.js";
 import CartRoute from "./routes/CartRoute.js"
 import UploadedItems from "./routes/UploadedItems.js"
+import chatRoute from "./routes/ChatRoute.js"
 
 // Middleware
 app.use(cors());
@@ -32,6 +33,7 @@ app.use("/auth", authRouter);
 app.use("/api", itemsRouter);
 app.use("/cart/",CartRoute)
 app.use("/api" , UploadedItems)
+app.use("/chat",chatRoute)
 // Example route
 app.get("/", (req, res) => {
     res.send("Hello World!");
