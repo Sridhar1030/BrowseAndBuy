@@ -42,7 +42,7 @@ const userChat = asyncHandler(async (req, res, next) => {
     }
 
     return res
-        .status(400)
+        .status(200)
         .json(new ApiResponse(200, "chat is successfully fetched", chat));
 });
 

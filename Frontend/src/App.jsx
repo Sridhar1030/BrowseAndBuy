@@ -22,71 +22,77 @@ import ResetPassword from "./components/LogSign/ResetPassword";
 import YourItems from "./components/YourItems/YourItems";
 
 function App() {
-  return (
-    <>
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:id/:token" element={<ResetPassword />} />
-          <Route
-            path="/home"
-            element={<ProtectedRoute element={<Home />} />}
-          />
-          <Route
-            path="/chat"
-            element={<ProtectedRoute element={<Chat />} />}
-          />
-          <Route
-            path="/AdminImages"
-            element={<ProtectedRoute element={<AdminImages />} />}
-          />
-          <Route
-            path="/purchase"
-            element={<ProtectedRoute element={<Purchase />} />}
-          />
-          <Route
-            path="/form/ImageUpload"
-            element={<ProtectedRoute element={<ImageUpload />} />}
-          />
-          <Route
-            path="/orders"
-            element={<ProtectedRoute element={<Order />} />}
-          />
-          <Route
-            path="/account"
-            element={<ProtectedRoute element={<Account />} />}
-          />
-          <Route
-            path="/purchase/book"
-            element={<ProtectedRoute element={<Book />} />}
-          />
-          <Route
-            path="/purchase/instruments"
-            element={<ProtectedRoute element={<Instruments />} />}
-          />
-          <Route
-            path="/purchase/labcoats"
-            element={<ProtectedRoute element={<Labcoats />} />}
-          />
-          <Route
-            path="/form"
-            element={<ProtectedRoute element={<Form />} />}
-          />
-          <Route
-            path="/cart"
-            element={<ProtectedRoute element={<Cart />} />}
-          />
-          <Route
-            path="/selling"
-            element={<ProtectedRoute element={<YourItems />} />}
-          />
-        </Routes>
-      </Router>
-    </>
-  );
+    return (
+        <>
+            <Router>
+                <Navbar />
+                <Routes>
+                    <Route path="/" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route
+                        path="/forgot-password"
+                        element={<ForgotPassword />}
+                    />
+                    <Route
+                        path="/reset-password/:id/:token"
+                        element={<ResetPassword />}
+                    />
+                    <Route
+                        path="/home"
+                        element={<ProtectedRoute element={<Home />} />}
+                    />
+                    <Route
+                        path="/chat"
+                        element={<ProtectedRoute element={<Chat />} />}
+                    />
+                    <Route
+                        path="/AdminImages"
+                        element={<ProtectedRoute element={<AdminImages />} />}
+                    />
+                    <Route
+                        path="/purchase"
+                        element={<ProtectedRoute element={<Purchase />} />}
+                    />
+                    <Route
+                        path="/form/ImageUpload"
+                        element={<ProtectedRoute element={<ImageUpload />} />}
+                    />
+                    <Route
+                        path="/orders"
+                        element={<ProtectedRoute element={<Order />} />}
+                    />
+                    <Route
+                        path="/account"
+                        element={<ProtectedRoute element={<Account />} />}
+                    />
+                    <Route
+                        path="/purchase/book"
+                        element={<ProtectedRoute element={<Book />} />}
+                    />
+                    <Route
+                        path="/purchase/instruments"
+                        element={<ProtectedRoute element={<Instruments />} />}
+                    />
+                    <Route
+                        path="/purchase/labcoats"
+                        element={<ProtectedRoute element={<Labcoats />} />}
+                    />
+                    <Route
+                        path="/form"
+                        element={<ProtectedRoute element={<Form />} />}
+                    />
+                    <Route
+                        path="/cart"
+                        element={<ProtectedRoute element={<Cart />} />}
+                    />
+                    <Route
+                        path="/selling"
+                        element={<ProtectedRoute element={<YourItems />} />}
+                    />
+                </Routes>
+            </Router>
+        </>
+    );
 }
 
 export default App;
