@@ -16,7 +16,6 @@ import AdminImages from "./components/Sell/AdminImages";
 import Labcoats from "./components/Purchase/Labcoats/Labcoats";
 import Cart from "./components/Cart/Cart";
 import Navbar from "./components/Navbar/Navbar";
-import ChatPage  from "./components/Chat/ChatPage";
 import ForgotPassword from "./components/LogSign/ForgotPassword";
 import ResetPassword from "./components/LogSign/ResetPassword";
 import YourItems from "./components/YourItems/YourItems";
@@ -57,10 +56,7 @@ function App() {
             path="/home"
             element={<ProtectedRoute element={<Home />} />}
           />
-          <Route
-            path="/chat"
-            element={<ProtectedRoute element={<ChatPage socket={socket} />} />}
-          />
+          
           <Route
             path="/AdminImages"
             element={<ProtectedRoute element={<AdminImages  />} />}

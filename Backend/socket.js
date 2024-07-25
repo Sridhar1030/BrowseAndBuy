@@ -2,7 +2,6 @@ import { Server } from "socket.io";
 import mongoose from "mongoose";
 import User from "./models/User.js";
 import Notification from "./models/Notification.js"; // Import the Notification model
-import Chat from "./models/Chat.js";
 const io = new Server({
     cors: {
         origin: "http://localhost:5173",
@@ -90,32 +89,6 @@ const setupSocket = (server) => {
                 );
             }
         });
-
-        socket.on("sendChat", async ({ senderName, receiverName, message }) => {
-            console.log(receiverName);
-            const receiver = getUser(receiverName);
-            if (receiver && receiver.socketId) {
-                io.to(receiver.socketId).emit("getChat", {
-                    senderName,
-                    receiverName,
-                    message,
-                });
-                // console.log(message)
-            } else {
-                // Store the message in the database if the user is offline
-                const newChat = new Chat({
-                    senderName,
-                    receiverName,
-                    message,
-                });
-                await newChat.save();
-
-                console.log(
-                    `User with username ${receiverName} not found. Message saved to DB.`
-                );
-            }
-        });
-
         socket.on("disconnect", () => {
             console.log("a user disconnected");
             removeUser(socket.id);
