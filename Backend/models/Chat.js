@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const notificationSchema = new mongoose.Schema(
+const chatSchema = new mongoose.Schema(
     {
         senderName: {
             type: String,
@@ -10,14 +10,18 @@ const notificationSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        
+
         isRead: {
             type: Boolean,
             default: false,
+        },
+        message: {
+            type: String,
+            required: true,
         },
     },
     { timestamps: true }
 );
 
-const Notification = mongoose.model("Notification", notificationSchema);
-export default Notification;
+const Chat = mongoose.model("Chat", chatSchema);
+export default Chat;

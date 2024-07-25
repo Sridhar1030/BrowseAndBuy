@@ -16,7 +16,7 @@ import AdminImages from "./components/Sell/AdminImages";
 import Labcoats from "./components/Purchase/Labcoats/Labcoats";
 import Cart from "./components/Cart/Cart";
 import Navbar from "./components/Navbar/Navbar";
-import { ChatPage } from "./components/Chat/ChatPage";
+import ChatPage  from "./components/Chat/ChatPage";
 import ForgotPassword from "./components/LogSign/ForgotPassword";
 import ResetPassword from "./components/LogSign/ResetPassword";
 import YourItems from "./components/YourItems/YourItems";
@@ -25,7 +25,7 @@ import { SocketProvider } from "./contexts/SocketContext";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user._id
+  const userId = user?._id
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
@@ -59,11 +59,11 @@ function App() {
           />
           <Route
             path="/chat"
-            element={<ProtectedRoute element={<ChatPage />} />}
+            element={<ProtectedRoute element={<ChatPage socket={socket} />} />}
           />
           <Route
             path="/AdminImages"
-            element={<ProtectedRoute element={<AdminImages />} />}
+            element={<ProtectedRoute element={<AdminImages  />} />}
           />
           <Route
             path="/purchase"
