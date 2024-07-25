@@ -1,13 +1,15 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./ChatBox.css";
 import { format } from "timeago.js";
 import InputEmoji from "react-input-emoji";
 
-function ChatBox({ chat, currentUser }) {
+function ChatBox({ chat, currentUser, setSendMessage, receivedMessage }) {
     const [userData, setUserData] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
+
+    const scroll = useRef();
 
     useEffect(() => {
         if (chat) {
@@ -48,10 +50,45 @@ function ChatBox({ chat, currentUser }) {
         if (chat) fetchMessages();
     }, [chat]);
 
-    const handleSendMessage = async () => {
+    const handleSendMessage = async (e) => {
         // Logic to send the new message
-        setNewMessage("");
+        e.preventDefault();
+
+        if (newMessage.trim() === "") return;
+
+        const message = {
+            senderId: currentUser,
+            text: newMessage,
+            chatId: chat?._id,
+        };
+
+        const receiverId = chat.members.find((id) => id !== currentUser);
+        // send message to socket server
+        setSendMessage({ ...message, receiverId });
+
+        try {
+            const response = await axios.post(
+                "http://localhost:3000/message/",
+                message
+            );
+            setMessages([...messages, response.data.data]);
+            setNewMessage("");
+        } catch (error) {
+            console.error("Error sending message:", error);
+        }
     };
+
+    // Receive Message from parent component
+    useEffect(() => {
+        console.log("Message Arrived: ", receivedMessage);
+        if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
+            setMessages([...messages, receivedMessage]);
+        }
+    }, [receivedMessage]);
+
+    useEffect(() => {
+        scroll.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
 
     return (
         <div className="ChatBox-container">
@@ -75,6 +112,7 @@ function ChatBox({ chat, currentUser }) {
                     <div className="chat-body">
                         {messages.map((message) => (
                             <div
+                                ref={scroll}
                                 key={message?._id}
                                 className={
                                     message?.senderId === currentUser
@@ -107,7 +145,9 @@ function ChatBox({ chat, currentUser }) {
                 </>
             ) : (
                 <div className="flex items-center justify-center h-full">
-                    <h2 className="text-gray-500 text-lg">Open a chat to start messaging...</h2>
+                    <h2 className="text-gray-500 text-lg">
+                        Open a chat to start messaging...
+                    </h2>
                 </div>
             )}
         </div>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-function Conversation({ data, currentUser }) {
+function Conversation({ data, currentUser, online  }) {
     const [userData, setUserData] = useState(null);
 
     useEffect(() => {
@@ -33,7 +33,7 @@ function Conversation({ data, currentUser }) {
         <>
             <div className="flex items-center p-2 hover:bg-gray-100 cursor-pointer">
                 <div className="relative">
-                    {/* {online && <div className="online-dot"></div>} */}
+                    {online && <div className="online-dot"></div>}
                     <img
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6FBxkzNCzOLEne4y_eQxAohbi3bjDrLYaTw&s"
                         alt="Profile"
@@ -42,11 +42,11 @@ function Conversation({ data, currentUser }) {
                 </div>
                 <div className="ml-4">
                     <span className="text-lg font-medium">{userData?.username}</span>
-                    {/* <span className={`text-xs ${online ? "text-green-500" : ""}`}>
-                        {online ? "Online" : "Offline"}
-                    </span> */}
                     <br />
-                    <span className="text-green-500 text-xs">Online</span>
+                    <span className={`text-xs ${online ? "text-green-500" : ""}`}>
+                        {online ? "Online" : "Offline"}
+                    </span>
+                    <br />
                 </div>
             </div>
             <hr className="w-11/12 mx-auto border-t border-gray-200" />
