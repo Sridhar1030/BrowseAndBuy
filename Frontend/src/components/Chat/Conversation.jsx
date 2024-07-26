@@ -20,7 +20,7 @@ function Conversation({ data, currentUser, online  }) {
                         },
                     }
                 );
-                console.log(res.data.data);
+                console.log("getUser", res.data.data);
                 setUserData(res.data.data);
             } catch (error) {
                 console.error("Error fetching user:", error);

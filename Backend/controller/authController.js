@@ -49,7 +49,7 @@ const signup = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: "User already exists" });
     }
 
-    const newUser = await User.create({ username, email, password , fullName });
+    const newUser = await User.create({ username, email, password, fullName });
 
     const user = await User.findById(newUser._id).select(
         "-password -refreshToken"
@@ -134,6 +134,16 @@ const getUserData = asyncHandler(async (req, res) => {
     }
 
     return res.status(200).json(new ApiResponse(200, "User data", user));
+});
+
+const getAllUsers = asyncHandler(async (req, res) => {
+    const users = await User.find({}).select("-password -resetPasswordRequests -refreshToken -ProductId -BoughtProductId -__v -isAdmin");
+
+    if (!users) {
+        throw new ApiError(404, "Users not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, "All users", users));
 });
 
 const logout = asyncHandler(async (req, res) => {
@@ -334,5 +344,6 @@ export {
     forgotPassword,
     resetPassword,
     deleteAccount,
-    getUserData
+    getUserData,
+    getAllUsers,
 };

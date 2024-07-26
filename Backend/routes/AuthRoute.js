@@ -11,6 +11,7 @@ import {
     forgotPassword,
     deleteAccount,
     getUserData,
+    getAllUsers,
 } from "../controller/authController.js";
 import verifyJwt from "../middleware/auth.middleware.js";
 
@@ -26,6 +27,7 @@ router.route("/update-user").post(verifyJwt, updateUserDetail);
 router.route("/delete-account").delete(verifyJwt, deleteAccount);
 router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password/:id/:token").post(resetPassword);
+router.route("/allUser").get(verifyJwt, getAllUsers)
 
 
 export default router;

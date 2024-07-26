@@ -9,7 +9,7 @@ const io = new Server(8800, {
 let activeUsers = [];
 
 io.on("connection", (socket) => {
-  // add new User
+// add new User
     socket.on("new-user-add", (newUserId) => {
     // if user is not added previously
         if (!activeUsers.some((user) => user.userId === newUserId)) {
@@ -28,7 +28,7 @@ socket.on("disconnect", () => {
     io.emit("get-users", activeUsers);
 });
 
-  // send message to a specific user
+// send message to a specific user
 socket.on("send-message", (data) => {
     const { receiverId } = data;
     const user = activeUsers.find((user) => user.userId === receiverId);

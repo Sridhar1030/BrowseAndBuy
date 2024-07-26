@@ -14,7 +14,6 @@ function Chat() {
     const [receivedMessage, setReceivedMessage] = useState(null);
 
     const socket = useRef();
-
     const [user, setUser] = useState(
         localStorage.getItem("user")
             ? JSON.parse(localStorage.getItem("user"))
@@ -35,6 +34,14 @@ function Chat() {
         socket.current.on("get-users", (users) => {
             setOnlineUsers(users);
         });
+
+        socket.current.on("recieve-message", (data) => {
+            setReceivedMessage(data);
+        });
+
+        return () => {
+            socket.current.disconnect();
+        };
     }, [user]);
 
     useEffect(() => {
@@ -44,7 +51,7 @@ function Chat() {
                     const response = await axios.get(
                         `http://localhost:3000/chat/${user?._id}`
                     );
-                    console.log(response.data.data);
+
                     setChats(response.data.data);
                 } catch (error) {
                     console.error("Error fetching chats:", error);
@@ -57,21 +64,17 @@ function Chat() {
     useEffect(() => {
         if (sendMessage !== null) {
             socket.current.emit("send-message", sendMessage);
+            setSendMessage(null);
         }
     }, [sendMessage]);
 
-    // Get the message from socket server
-    useEffect(() => {
-        socket.current.on("recieve-message", (data) => {
-            console.log("recieve-message", data);
-            setReceivedMessage(data);
-        });
-    }, []);
+    const handleNewChat = (newChat) => {
+        setChats((prevChats) => [...prevChats, newChat]);
+    };
 
     const checkOnlineStatus = (chat) => {
         const chatMember = chat.members.find((member) => member !== user._id);
-        const online = onlineUsers.find((user) => user.userId === chatMember);
-        return online ? true : false;
+        return onlineUsers.some((user) => user.userId === chatMember);
     };
 
     if (!user) {
@@ -81,24 +84,27 @@ function Chat() {
     return (
         <div className="Chat">
             <div className="Left-side-chat">
-                <LogoSearch />
+                <LogoSearch onNewChat={handleNewChat} />
                 <div className="Chat-container">
-                    <h2>Chat </h2>
+                    <h2>Chat</h2>
                     <div className="Chat-list">
-                        {chats?.map((chat) => (
-                            <div
-                                key={chat._id}
-                                onClick={() => {
-                                    setCurrentChat(chat);
-                                }}
-                            >
-                                <Conversation
-                                    data={chat}
-                                    currentUser={user?._id}
-                                    online={checkOnlineStatus(chat)}
-                                />
-                            </div>
-                        ))}
+                        {chats
+                            ?.slice()
+                            .reverse()
+                            .map((chat) => (
+                                <div
+                                    key={chat._id}
+                                    onClick={() => {
+                                        setCurrentChat(chat);
+                                    }}
+                                >
+                                    <Conversation
+                                        data={chat}
+                                        currentUser={user?._id}
+                                        online={checkOnlineStatus(chat)}
+                                    />
+                                </div>
+                            ))}
                     </div>
                 </div>
             </div>

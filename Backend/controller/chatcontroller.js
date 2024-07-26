@@ -12,21 +12,36 @@ const createChat = asyncHandler(async (req, res, next) => {
         );
     }
 
-    const newChat = new Chat({
-        members: [senderId, receiverId],
-    });
+    if (senderId === receiverId) {
+        return next(new ApiError(400, "You can't create chat with yourself"));
+    }
 
     try {
+        const existingChat = await Chat.findOne({
+            members: { $all: [senderId, receiverId] }
+        });
+
+        if (existingChat) {
+            return res.status(400).json(
+                new ApiResponse(400, "Chat already exists", {})
+            );
+        }
+
+        const newChat = new Chat({
+            members: [senderId, receiverId],
+        });
+
         const result = await newChat.save();
-        return res
-            .status(200)
-            .json(new ApiResponse(200, "chat is successfully create", result));
+        return res.status(200).json(
+            new ApiResponse(200, "Chat successfully created", result)
+        );
     } catch (error) {
         return next(
             new ApiError(500, "An error occurred while creating the chat", {})
         );
     }
 });
+
 
 const userChat = asyncHandler(async (req, res, next) => {
     const { userId } = req.params;
