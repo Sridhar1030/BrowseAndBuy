@@ -6,7 +6,7 @@ import { ApiResponse } from "../utils.js/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { sendEmail } from "../utils.js/sendmail.js";
-import validator from "email-validator"
+import validator from "email-validator";
 
 const generateAccessAndRefreshToken = async (userId) => {
     try {
@@ -49,7 +49,7 @@ const signup = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: "User already exists" });
     }
 
-    const newUser = await User.create({ username, email, password });
+    const newUser = await User.create({ username, email, password, fullName });
 
     const user = await User.findById(newUser._id).select(
         "-password -refreshToken"
@@ -122,6 +122,28 @@ const userData = asyncHandler(async (req, res) => {
             user: req.user,
         })
     );
+});
+
+const getUserData = asyncHandler(async (req, res) => {
+    const { userId } = req.body;
+
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, "User data", user));
+});
+
+const getAllUsers = asyncHandler(async (req, res) => {
+    const users = await User.find({}).select("-password -resetPasswordRequests -refreshToken -ProductId -BoughtProductId -__v -isAdmin");
+
+    if (!users) {
+        throw new ApiError(404, "Users not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, "All users", users));
 });
 
 const logout = asyncHandler(async (req, res) => {
@@ -216,9 +238,17 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
     const now = new Date();
     const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-    if (user.resetPasswordRequests.lastRequest && user.resetPasswordRequests.lastRequest > oneDayAgo) {
+    if (
+        user.resetPasswordRequests.lastRequest &&
+        user.resetPasswordRequests.lastRequest > oneDayAgo
+    ) {
         if (user.resetPasswordRequests.count >= 5) {
-            return next(new ApiError(429, "You have exceeded the maximum number of reset requests for today. Please try again tomorrow."));
+            return next(
+                new ApiError(
+                    429,
+                    "You have exceeded the maximum number of reset requests for today. Please try again tomorrow."
+                )
+            );
         }
     } else {
         user.resetPasswordRequests.count = 0;
@@ -229,7 +259,9 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
     await user.save();
 
     const secret = process.env.ACCESS_TOKEN_SECRET + user.password;
-    const token = jwt.sign({ email, _id: user._id }, secret, { expiresIn: "5m" });
+    const token = jwt.sign({ email, _id: user._id }, secret, {
+        expiresIn: "5m",
+    });
     const link = `http://localhost:5173/reset-password/${user._id}/${token}`;
 
     sendEmail(link, email)
@@ -240,9 +272,10 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
             console.log(error);
         });
 
-    return res.json(new ApiResponse(200, "Link has been sent to your email", {}));
+    return res.json(
+        new ApiResponse(200, "Link has been sent to your email", {})
+    );
 });
-
 
 const resetPassword = asyncHandler(async (req, res, next) => {
     const { id, token } = req.params;
@@ -285,7 +318,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
             new ApiResponse(200, "Password updated successfully", {})
         );
     } catch (error) {
-        console.error("Error resetting password:", error); 
+        console.error("Error resetting password:", error);
         return next(new ApiError(500, "Internal Server Error"));
     }
 });
@@ -311,4 +344,6 @@ export {
     forgotPassword,
     resetPassword,
     deleteAccount,
+    getUserData,
+    getAllUsers,
 };
