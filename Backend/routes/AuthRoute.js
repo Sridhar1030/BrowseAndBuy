@@ -19,7 +19,7 @@ const router = Router();
 
 router.route("/signup").post(signup);
 router.route("/login").post(login);
-router.route("/logout").post(verifyJwt, logout);
+router.route("/logout").get(verifyJwt, logout);
 router.route("/userData").get(verifyJwt, userData);
 router.route("/getUserData").post(verifyJwt, getUserData);
 router.route("/change-password").post(verifyJwt, changePassword);

@@ -116,36 +116,6 @@ const login = asyncHandler(async (req, res) => {
         );
 });
 
-const userData = asyncHandler(async (req, res) => {
-    return res.status(201).json(
-        new ApiResponse(201, "chat detail is fetch", {
-            user: req.user,
-        })
-    );
-});
-
-const getUserData = asyncHandler(async (req, res) => {
-    const { userId } = req.body;
-
-    const user = await User.findById(userId).select("-password");
-
-    if (!user) {
-        throw new ApiError(404, "User not found");
-    }
-
-    return res.status(200).json(new ApiResponse(200, "User data", user));
-});
-
-const getAllUsers = asyncHandler(async (req, res) => {
-    const users = await User.find({}).select("-password -resetPasswordRequests -refreshToken -ProductId -BoughtProductId -__v -isAdmin");
-
-    if (!users) {
-        throw new ApiError(404, "Users not found");
-    }
-
-    return res.status(200).json(new ApiResponse(200, "All users", users));
-});
-
 const logout = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
         req.user?._id,
@@ -169,6 +139,38 @@ const logout = asyncHandler(async (req, res) => {
         .clearCookie("accessToken", options)
         .clearCookie("refreshToken", options)
         .json(new ApiResponse(201, "User is logout successfully", {}));
+});
+
+const userData = asyncHandler(async (req, res) => {
+    return res.status(201).json(
+        new ApiResponse(201, "chat detail is fetch", {
+            user: req.user,
+        })
+    );
+});
+
+const getUserData = asyncHandler(async (req, res) => {
+    const { userId } = req.body;
+
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, "User data", user));
+});
+
+const getAllUsers = asyncHandler(async (req, res) => {
+    const users = await User.find({}).select(
+        "-password -resetPasswordRequests -refreshToken -ProductId -BoughtProductId -__v -isAdmin"
+    );
+
+    if (!users) {
+        throw new ApiError(404, "Users not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, "All users", users));
 });
 
 const changePassword = asyncHandler(async (req, res) => {
