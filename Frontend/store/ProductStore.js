@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const baseURL = "http://localhost:3000";
+const baseURL = "/api";
 const user = JSON.parse(localStorage.getItem("user"));
 const userId = user ? user._id : null;
 console.log("user id is " , userId)

@@ -78,7 +78,7 @@ function PurchaseCard({ book }) {
                 console.log(userId, "wants to buy");
                 console.log(sellerId, "is the seller");
                 try {
-                    const response = await axios.post('http://localhost:3000/notify-seller', {
+                    const response = await axios.post('/api/notify-seller', {
                         buyerId: userId,
                         sellerId: sellerId,
                         itemId: book._id,

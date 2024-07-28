@@ -44,7 +44,7 @@ const Signup = () => {
                 return
             }
 
-            const url = "http://localhost:3000/auth/signup";
+            const url = "/api/auth/signup";
             const response = await axios.post(url, formData);
             // console.log(response);
             setMessage(response.data.message);

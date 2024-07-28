@@ -49,7 +49,7 @@ function Chat() {
             if (user) {
                 try {
                     const response = await axios.get(
-                        `http://localhost:3000/chat/${user?._id}`
+                        `/api/chat/${user?._id}`
                     );
 
                     setChats(response.data.data);

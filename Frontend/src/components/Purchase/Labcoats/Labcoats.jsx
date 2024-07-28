@@ -10,7 +10,7 @@ function Labcoats() {
     const [isEmpty, setIsEmpty] = useState(false); // State to track if filteredLabcoats is empty
 
     useEffect(() => {
-        fetch('http://localhost:3000/api/items/Labcoats')
+        fetch('/api/items/Labcoats')
             .then(response => response.json())
             .then(data => {
                 setLabcoats(data);

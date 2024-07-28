@@ -58,7 +58,7 @@ function ImageUpload() {
         return;
       }
 
-      const url = "http://localhost:3000/sell";
+      const url = "/api/sell";
       const user = JSON.parse(localStorage.getItem("user"));
       const userId = user ? user._id : null;
 
@@ -114,7 +114,7 @@ function ImageUpload() {
 
     try {
       console.log("Sending images to the backend...");
-      const response = await axios.post('http://localhost:3000/api/users/upload', formDataForUpload, {
+      const response = await axios.post('/api/users/upload', formDataForUpload, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

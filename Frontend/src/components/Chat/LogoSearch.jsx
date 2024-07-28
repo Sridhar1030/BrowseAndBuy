@@ -12,7 +12,7 @@ const LogoSearch = ({ onNewChat }) => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:3000/auth/allUser", {
+            .get("/api/auth/allUser", {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -37,7 +37,7 @@ const LogoSearch = ({ onNewChat }) => {
         }
 
         try {
-            const response = await axios.post("http://localhost:3000/chat/", {
+            const response = await axios.post("/api/chat/", {
                 senderId: currentUser._id,
                 receiverId: user._id,
             });

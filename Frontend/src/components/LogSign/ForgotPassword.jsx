@@ -24,7 +24,7 @@ function ForgotPassword() {
 
         try {
             const response = await axios.post(
-                "http://localhost:3000/auth/forgot-password",
+                "/api/auth/forgot-password",
                 { email }
             );
             if (response.status === 200) {
@@ -99,7 +99,7 @@ function ForgotPassword() {
                             type="submit"
                             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                         >
-                            Sumbit
+                            Submit
                         </button>
                     )}
                 </form>
