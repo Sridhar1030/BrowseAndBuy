@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { io } from "socket.io-client"; // Import io
 
-const baseURL = "http://localhost:3000";
+const baseURL = "/api";
 const user = JSON.parse(localStorage.getItem("user"));
 const userId = user ? user._id : null;
 const socket = io(baseURL);

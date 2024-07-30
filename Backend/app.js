@@ -28,14 +28,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // Route middleware
-app.use("/sell", sellRoute);
+app.use("/api/sell", sellRoute);
 app.use("/api/users", userRoute); // Use userRoute imported with require
-app.use("/auth", authRouter);
+app.use("/api/auth", authRouter);
 app.use("/api", itemsRouter);
-app.use("/cart/",CartRoute)
+app.use("/api/cart/",CartRoute)
 app.use("/api" , UploadedItems)
-app.use("/chat",chatRoute)
-app.use("/message",messageRoute)
+app.use("/api/chat",chatRoute)
+app.use("/api/message",messageRoute)
 
 // Example route
 app.get("/", (req, res) => {

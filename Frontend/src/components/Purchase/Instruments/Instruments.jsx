@@ -9,7 +9,7 @@ function Book() {
     const [isEmpty, setIsEmpty] = useState(false); // State to track if filteredBooks is empty
 
     useEffect(() => {
-        fetch('http://localhost:3000/api/items/GraphicsInstruments')
+        fetch('/api/items/GraphicsInstruments')
             .then(response => response.json())
             .then(data => {
                 setGraph(data);

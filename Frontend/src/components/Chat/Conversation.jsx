@@ -11,7 +11,7 @@ function Conversation({ data, currentUser, online  }) {
         const getUser = async () => {
             try {
                 const res = await axios.post(
-                    `http://localhost:3000/auth/getUserData`,
+                    `/api/auth/getUserData`,
                     { userId: userId },
                     {
                         headers: {

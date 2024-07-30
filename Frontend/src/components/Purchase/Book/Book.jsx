@@ -10,7 +10,7 @@ function Book() {
     const [isEmpty, setIsEmpty] = useState(false); // State to track if filtereditems is empty
 
     useEffect(() => {
-        fetch('http://localhost:3000/api/items/EngineeringBooks')
+        fetch('/api/items/EngineeringBooks')
             .then(response => response.json())
             .then(data => {
                 setitems(data);

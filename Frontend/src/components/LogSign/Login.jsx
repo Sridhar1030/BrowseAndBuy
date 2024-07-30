@@ -11,7 +11,7 @@ function Login() {
     const [password, setPassword] = useState("");
 
     const login = async () => {
-        const url = "http://localhost:3000/auth/login";
+        const url = "/api/auth/login";
         const data =
             email !== "" ? { email, password } : { username, password };
         

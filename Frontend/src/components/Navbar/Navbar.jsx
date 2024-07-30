@@ -1,18 +1,59 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import profileSvg from '../../assets/profile.svg';
-import CartNumber from './CartNumber';
-import Notification from '../../assets/notification.svg';
-import { useSocket } from '../../contexts/SocketContext';
+import CartNumber from './CartNumber'; // Adjust the import path as necessary
 
 function Navbar({ socket, user }) {
     const navigate = useNavigate();
-    const [notifications, setNotifications] = useState([]);
-    const [showNotifications, setShowNotifications] = useState(false);
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        try {
+            const response = await axios.get(
+                "/api/auth/logout",
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    },
+                }
+            );
+
+            console.log(response.data);
+
+            alert(response.data.message);
+        } catch (error) {
+            console.error("Error logging out:", error);
+            alert("An error occurred. Please try again.");
+        }
         localStorage.clear();
-        navigate('/');
+        navigate("/");
+    };
+
+    useEffect(() => {
+        if (socket) {
+            socket.on("getNotification", (data) => {
+                setNotifications((prev) => [...prev, data]);
+            });
+
+            // Optional: Fetch unread notifications from server on login or specific page load
+            // const fetchUnreadNotifications = async () => {
+            //     const response = await fetch(`/api/notifications/${user._id}`);
+            //     const notifications = await response.json();
+            //     setNotifications(notifications);
+            // };
+
+            // if (user) {
+            //     fetchUnreadNotifications();
+            // }
+
+            return () => {
+                socket.off("getNotification");
+            };
+        }
+    }, [socket, user]);
+
+    const toggleNotifications = () => {
+        setShowNotifications((prev) => !prev);
     };
 
     useEffect(() => {
@@ -47,19 +88,41 @@ function Navbar({ socket, user }) {
             <div className="flex justify-start space-x-11 h-20 mx-3">
                 <div className="flex justify-center align-middle">
                     <button>
-                        <Link to="/home" className="text-2xl flex justify-center align-middle">
-                            <img className='size-10' src="https://cdn-icons-png.flaticon.com/512/9752/9752709.png" alt="" />
+                        <Link
+                            to="/home"
+                            className="text-2xl flex justify-center align-middle"
+                        >
+                            <img
+                                className="size-10"
+                                src="https://cdn-icons-png.flaticon.com/512/9752/9752709.png"
+                                alt=""
+                            />
                             Browse And Buy
                         </Link>
                     </button>
-                    <div className='flex text-lg ml-14 space-x-10'>
-                        <button><Link to="/purchase">Purchase</Link></button>
-                        <button><Link to="/form">Sell</Link></button>
-                        <button><Link to="/orders">Your orders</Link></button>
-                        <button><Link to="/selling">Your Items</Link></button>
+                    <div className="flex text-lg ml-14 space-x-10">
                         <button>
-                            <Link to="/account" className='flex justify-center align-middle'>
-                                <img className='mr-2 size-5 flexjustify-center' src={profileSvg} alt="" />
+                            <Link to="/purchase">Purchase</Link>
+                        </button>
+                        <button>
+                            <Link to="/form">Sell</Link>
+                        </button>
+                        <button>
+                            <Link to="/orders">Your orders</Link>
+                        </button>
+                        <button>
+                            <Link to="/selling">Your Items</Link>
+                        </button>
+                        <button>
+                            <Link
+                                to="/account"
+                                className="flex justify-center align-middle"
+                            >
+                                <img
+                                    className="mr-2 size-5 flexjustify-center"
+                                    src={profileSvg}
+                                    alt=""
+                                />
                                 Account
                             </Link>
 
@@ -101,11 +164,19 @@ function Navbar({ socket, user }) {
 
                 <button>
                     <CartNumber />
-                    <Link to="/cart" className='flex justify-center align-middle gap-4'>
-                        <img width={30} height={30} src="https://img.icons8.com/ios/50/shopping-cart--v1.png" alt="shopping-cart--v1" />
+                    <Link
+                        to="/cart"
+                        className="flex justify-center align-middle gap-4"
+                    >
+                        <img
+                            width={30}
+                            height={30}
+                            src="https://img.icons8.com/ios/50/shopping-cart--v1.png"
+                            alt="shopping-cart--v1"
+                        />
                     </Link>
                 </button>
-                <button onClick={handleLogout} className='hover:text-red-500'>
+                <button onClick={handleLogout} className="hover:text-red-500">
                     Logout
                 </button>
             </div>

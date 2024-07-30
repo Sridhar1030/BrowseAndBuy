@@ -18,7 +18,7 @@ function ChatBox({ chat, currentUser, setSendMessage, receivedMessage }) {
             const getUser = async () => {
                 try {
                     const res = await axios.post(
-                        `http://localhost:3000/auth/getUserData`,
+                        `/api/auth/getUserData`,
                         { userId: userId },
                         {
                             headers: {
@@ -40,7 +40,7 @@ function ChatBox({ chat, currentUser, setSendMessage, receivedMessage }) {
         const fetchMessages = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:3000/message/${chat?._id}`
+                    `/api/message/${chat?._id}`
                 );
                 setMessages(response.data);
             } catch (error) {
