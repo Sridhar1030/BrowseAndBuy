@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../Navbar/Navbar';
 import Menu from '../../Menu/Menu';
-import LCard from './LCard'; // Assuming LCard component is for displaying labcoats
-
+import LCard from './LCard'; // Assuming LCard component is for displaying items
+import MainCard from '../MainCard';
 function Labcoats() {
-    const [labcoats, setLabcoats] = useState([]);
-    const [filteredLabcoats, setFilteredLabcoats] = useState([]);
+    const [items, setitems] = useState([]);
+    const [filtereditems, setFiltereditems] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [isEmpty, setIsEmpty] = useState(false); // State to track if filteredLabcoats is empty
+    const [isEmpty, setIsEmpty] = useState(false); // State to track if filtereditems is empty
 
     useEffect(() => {
         fetch('http://localhost:3000/api/items/Labcoats')
             .then(response => response.json())
             .then(data => {
-                setLabcoats(data);
-                setFilteredLabcoats(data); // Initialize filteredLabcoats with all labcoats
+                setitems(data);
+                setFiltereditems(data); // Initialize filtereditems with all items
             })
-            .catch(error => console.error('Error fetching labcoats:', error));
+            .catch(error => console.error('Error fetching items:', error));
     }, []);
 
     const handleSearch = (event) => {
@@ -24,14 +24,14 @@ function Labcoats() {
         console.log('Search term:', searchTerm);
 
         if (searchTerm === '') {
-            setFilteredLabcoats(labcoats); // Display all labcoats if search term is empty
+            setFiltereditems(items); // Display all items if search term is empty
         } else {
-            const filtered = labcoats.filter(labcoat => labcoat.Item_Name.toLowerCase().includes(searchTerm.toLowerCase()));
-            setFilteredLabcoats(filtered);
+            const filtered = items.filter(item => item.Item_Name.toLowerCase().includes(searchTerm.toLowerCase()));
+            setFiltereditems(filtered);
         }
 
-        // Check if filteredLabcoats is empty
-        setIsEmpty(filteredLabcoats.length === 0 && searchTerm !== '');
+        // Check if filtereditems is empty
+        setIsEmpty(filtereditems.length === 0 && searchTerm !== '');
     };
 
     const handleChange = (event) => {
@@ -59,7 +59,7 @@ function Labcoats() {
                                     value={searchTerm}
                                     onChange={handleChange}
                                     className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                    placeholder="Search Labcoats..."
+                                    placeholder="Search items..."
                                 />
                                 <button
                                     type="submit"
@@ -71,12 +71,12 @@ function Labcoats() {
                         </form>
                     </div>
                     {isEmpty ? (
-                        <div className="text-center text-gray-600 mt-4">No such labcoats found.</div>
+                        <div className="text-center text-gray-600 mt-4">No such items found.</div>
                     ) : (
                         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6'>
-                            {filteredLabcoats.map((labcoat, index) => (
+                            {filtereditems.map((item, index) => (
                                 <div key={index} className='mb-4'>
-                                    <LCard labcoat={labcoat} />
+                                    <MainCard item={item} />
                                 </div>
                             ))}
                         </div>

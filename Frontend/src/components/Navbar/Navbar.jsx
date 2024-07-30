@@ -1,14 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import profileSvg from '../../assets/profile.svg';
-import CartNumber from './CartNumber'; // Adjust the import path as necessary
+import CartNumber from './CartNumber';
+import Notification from '../../assets/notification.svg';
+import { useSocket } from '../../contexts/SocketContext';
 
-function Navbar() {
+function Navbar({ socket, user }) {
     const navigate = useNavigate();
+    const [notifications, setNotifications] = useState([]);
+    const [showNotifications, setShowNotifications] = useState(false);
 
     const handleLogout = () => {
         localStorage.clear();
         navigate('/');
+    };
+
+    useEffect(() => {
+        if (socket) {
+            socket.on("getNotification", (data) => {
+                setNotifications((prev) => [...prev, data]);
+            });
+
+            // Optional: Fetch unread notifications from server on login or specific page load
+            // const fetchUnreadNotifications = async () => {
+            //     const response = await fetch(`/api/notifications/${user._id}`);
+            //     const notifications = await response.json();
+            //     setNotifications(notifications);
+            // };
+
+            // if (user) {
+            //     fetchUnreadNotifications();
+            // }
+
+            return () => {
+                socket.off("getNotification");
+            };
+        }
+    }, [socket, user]);
+
+    const toggleNotifications = () => {
+        setShowNotifications((prev) => !prev);
     };
 
     return (
@@ -31,11 +62,43 @@ function Navbar() {
                                 <img className='mr-2 size-5 flexjustify-center' src={profileSvg} alt="" />
                                 Account
                             </Link>
+
+
                         </button>
                     </div>
                 </div>
             </div>
-            <div className='mx-5 flex items-center gap-10'>
+            <div className='mx-5 flex justify-center align-middle items-center gap-10'>
+                <div className='relative  '>
+                    <img
+                        src={Notification}
+                        className='size-6 cursor-pointer hover:animate-ring'
+                        alt="Notification Icon"
+                        onClick={toggleNotifications}
+                        />
+                        <span className="absolute -top-1 left-4 text-sm bg-red-400 text-white rounded-full px-1 py-0.5">
+                            {notifications.length}
+                        </span>
+                    
+
+                    {showNotifications && (
+                        <div className="absolute  bg-white border rounded shadow-lg p-3 w-64">
+                            <h4 className="font-bold mb-2">Notifications</h4>
+                            {notifications.length > 0 ? (
+                                <ul>
+                                    {notifications.map((notif, index) => (
+                                        <li key={index} className="mb-2">
+                                            <p><strong>{notif.senderName}</strong>: wants to buy</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No new notifications</p>
+                            )}
+                        </div>
+                    )}
+                </div>
+
                 <button>
                     <CartNumber />
                     <Link to="/cart" className='flex justify-center align-middle gap-4'>

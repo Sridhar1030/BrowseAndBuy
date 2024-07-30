@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../Navbar/Navbar';
 import Menu from '../../Menu/Menu';
-import Card from './Card';
+import MainCard from '../MainCard';
 
 function Book() {
-    const [books, setBooks] = useState([]);
-    const [filteredBooks, setFilteredBooks] = useState([]);
+    const [items, setitems] = useState([]);
+    const [filtereditems, setFiltereditems] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [isEmpty, setIsEmpty] = useState(false); // State to track if filteredBooks is empty
+    const [isEmpty, setIsEmpty] = useState(false); // State to track if filtereditems is empty
 
     useEffect(() => {
         fetch('http://localhost:3000/api/items/EngineeringBooks')
             .then(response => response.json())
             .then(data => {
-                setBooks(data);
-                setFilteredBooks(data); // Initialize filteredBooks with all books
+                setitems(data);
+                setFiltereditems(data); // Initialize filtereditems with all items
             })
-            .catch(error => console.error('Error fetching books:', error));
+            .catch(error => console.error('Error fetching items:', error));
     }, []);
 
     const handleSearch = (event) => {
@@ -24,14 +24,14 @@ function Book() {
         console.log('Search term:', searchTerm);
 
         if (searchTerm === '') {
-            setFilteredBooks(books); // Display all books if search term is empty
+            setFiltereditems(items); // Display all items if search term is empty
         } else {
-            const filtered = books.filter(book => book.Item_Name.toLowerCase().includes(searchTerm.toLowerCase()));
-            setFilteredBooks(filtered);
+            const filtered = items.filter(item => item.Item_Name.toLowerCase().includes(searchTerm.toLowerCase()));
+            setFiltereditems(filtered);
         }
 
-        // Check if filteredBooks is empty
-        setIsEmpty(filteredBooks.length === 0 && searchTerm !== '');
+        // Check if filtereditems is empty
+        setIsEmpty(filtereditems.length === 0 && searchTerm !== '');
     };
 
     const handleChange = (event) => {
@@ -60,7 +60,7 @@ function Book() {
                                     value={searchTerm}
                                     onChange={handleChange}
                                     className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                                    placeholder="Search Book..."
+                                    placeholder="Search item..."
                                 />
                                 <button
                                     type="submit"
@@ -72,12 +72,12 @@ function Book() {
                         </form>
                     </div>
                     {isEmpty ? (
-                        <div className="text-center text-gray-600 mt-4">No such books found.</div>
+                        <div className="text-center text-gray-600 mt-4">No such items found.</div>
                     ) : (
                         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6'>
-                            {filteredBooks.map((book, index) => (
-                                <div key={book._id} className='mb-4'>
-                                    <Card book={book} />
+                            {filtereditems.map((item, index) => (
+                                <div key={item._id} className='mb-4'>
+                                    <MainCard item={item} />
                                 </div>
                             ))}
                         </div>
