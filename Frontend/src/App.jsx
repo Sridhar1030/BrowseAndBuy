@@ -16,10 +16,7 @@ import AdminImages from "./components/Sell/AdminImages";
 import Labcoats from "./components/Purchase/Labcoats/Labcoats";
 import Cart from "./components/Cart/Cart";
 import Navbar from "./components/Navbar/Navbar";
-<<<<<<< HEAD
 import Chat from "./components/Chat/Chat";
-=======
->>>>>>> notification
 import ForgotPassword from "./components/LogSign/ForgotPassword";
 import ResetPassword from "./components/LogSign/ResetPassword";
 import YourItems from "./components/YourItems/YourItems";
@@ -27,79 +24,6 @@ import { io } from "socket.io-client";
 import { SocketProvider } from "./contexts/SocketContext";
 
 function App() {
-<<<<<<< HEAD
-    return (
-        <>
-            <Router>
-                <Navbar />
-                <Routes>
-                    <Route path="/" element={<Login />} />
-                    <Route path="/signup" element={<Signup />} />
-                    <Route
-                        path="/forgot-password"
-                        element={<ForgotPassword />}
-                    />
-                    <Route
-                        path="/reset-password/:id/:token"
-                        element={<ResetPassword />}
-                    />
-                    <Route
-                        path="/home"
-                        element={<ProtectedRoute element={<Home />} />}
-                    />
-                    <Route
-                        path="/chat"
-                        element={<ProtectedRoute element={<Chat />} />}
-                    />
-                    <Route
-                        path="/AdminImages"
-                        element={<ProtectedRoute element={<AdminImages />} />}
-                    />
-                    <Route
-                        path="/purchase"
-                        element={<ProtectedRoute element={<Purchase />} />}
-                    />
-                    <Route
-                        path="/form/ImageUpload"
-                        element={<ProtectedRoute element={<ImageUpload />} />}
-                    />
-                    <Route
-                        path="/orders"
-                        element={<ProtectedRoute element={<Order />} />}
-                    />
-                    <Route
-                        path="/account"
-                        element={<ProtectedRoute element={<Account />} />}
-                    />
-                    <Route
-                        path="/purchase/book"
-                        element={<ProtectedRoute element={<Book />} />}
-                    />
-                    <Route
-                        path="/purchase/instruments"
-                        element={<ProtectedRoute element={<Instruments />} />}
-                    />
-                    <Route
-                        path="/purchase/labcoats"
-                        element={<ProtectedRoute element={<Labcoats />} />}
-                    />
-                    <Route
-                        path="/form"
-                        element={<ProtectedRoute element={<Form />} />}
-                    />
-                    <Route
-                        path="/cart"
-                        element={<ProtectedRoute element={<Cart />} />}
-                    />
-                    <Route
-                        path="/selling"
-                        element={<ProtectedRoute element={<YourItems />} />}
-                    />
-                </Routes>
-            </Router>
-        </>
-    );
-=======
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?._id
   const [socket, setSocket] = useState(null);
@@ -118,12 +42,12 @@ function App() {
 
 
 
-  console.log("socket provider is " , SocketProvider)
+  console.log("socket provider is ", SocketProvider)
 
   return (
     <Router>
       <Navbar socket={socket} user={userId} />
-        <SocketProvider >
+      <SocketProvider >
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -133,10 +57,14 @@ function App() {
             path="/home"
             element={<ProtectedRoute element={<Home />} />}
           />
-          
+          <Route
+            path="/chat"
+            element={<ProtectedRoute element={<Chat />} />}
+          />
+
           <Route
             path="/AdminImages"
-            element={<ProtectedRoute element={<AdminImages  />} />}
+            element={<ProtectedRoute element={<AdminImages />} />}
           />
           <Route
             path="/purchase"
@@ -169,21 +97,20 @@ function App() {
           <Route
             path="/form"
             element={<ProtectedRoute element={<Form />} />}
-            />
+          />
           <Route
             path="/cart"
             element={<ProtectedRoute element={<Cart />} />}
-            />
+          />
           <Route
             path="/selling"
             element={<ProtectedRoute element={<YourItems />} />}
-            />
+          />
         </Routes>
-    
-            </SocketProvider>
-      </Router>
+
+      </SocketProvider>
+    </Router>
   );
->>>>>>> notification
 }
 
 export default App;

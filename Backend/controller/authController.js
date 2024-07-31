@@ -49,11 +49,7 @@ const signup = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: "User already exists" });
     }
 
-<<<<<<< HEAD
     const newUser = await User.create({ username, email, password, fullName });
-=======
-    const newUser = await User.create({ username, email, password,fullName });
->>>>>>> notification
 
     const user = await User.findById(newUser._id).select(
         "-password -refreshToken"

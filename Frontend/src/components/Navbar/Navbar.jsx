@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import profileSvg from '../../assets/profile.svg';
 import CartNumber from './CartNumber'; // Adjust the import path as necessary
+import { useEffect } from 'react';
+
 
 function Navbar({ socket, user }) {
     const navigate = useNavigate();
 
+    const [notifications, setNotifications] = useState([]);
+    const [showNotifications, setShowNotifications] = useState(false);
     const handleLogout = async () => {
         try {
             const response = await axios.get(
@@ -29,32 +33,7 @@ function Navbar({ socket, user }) {
         navigate("/");
     };
 
-    useEffect(() => {
-        if (socket) {
-            socket.on("getNotification", (data) => {
-                setNotifications((prev) => [...prev, data]);
-            });
 
-            // Optional: Fetch unread notifications from server on login or specific page load
-            // const fetchUnreadNotifications = async () => {
-            //     const response = await fetch(`/api/notifications/${user._id}`);
-            //     const notifications = await response.json();
-            //     setNotifications(notifications);
-            // };
-
-            // if (user) {
-            //     fetchUnreadNotifications();
-            // }
-
-            return () => {
-                socket.off("getNotification");
-            };
-        }
-    }, [socket, user]);
-
-    const toggleNotifications = () => {
-        setShowNotifications((prev) => !prev);
-    };
 
     useEffect(() => {
         if (socket) {

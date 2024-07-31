@@ -68,7 +68,7 @@ function ChatBox({ chat, currentUser, setSendMessage, receivedMessage }) {
 
         try {
             const response = await axios.post(
-                "http://localhost:3000/message/",
+                "api/message/",
                 message
             );
             setMessages([...messages, response.data.data]);
