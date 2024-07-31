@@ -3,10 +3,14 @@ import ImageCarousel from './ImageCarousel'; // Adjust import path
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useCartStore } from '../../../store/cartStore'; // Adjust import path
+import { Socket } from 'socket.io-client';
+import { useSocket } from '../../contexts/SocketContext';
 
 function MainCard({ item, onBuy, onCart }) {
+    const socket = useSocket();
     const addCartItem = useCartStore(state => state.addCartItem);
-    console.log("item is " , item)
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log("item is ", item)
     const handleCart = async () => {
         const productData = {
             id: item._id,
@@ -29,6 +33,16 @@ function MainCard({ item, onBuy, onCart }) {
             toast.error('Failed to add to cart');
         }
     };
+
+
+    const handleBuy = async () => {
+        console.log("buy clicked")
+        socket.emit("sendNotification", {
+            senderName: user.username,
+            receiverName: item.F_Name,
+
+        })
+    }
 
     return (
         <div className='card border rounded-lg shadow-lg p-6 m-4'>
@@ -56,11 +70,11 @@ function MainCard({ item, onBuy, onCart }) {
                     <p className='text-gray-700 mb-2'>Approved: {item.Approved ? "Yes" : "No"}</p>
                 </div>
                 <div className='flex w-full justify-evenly space-x-10'>
-                    {onBuy && (
-                        <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={onBuy}>
-                            Buy
-                        </button>
-                    )}
+
+                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={handleBuy}>
+                        Buy
+                    </button>
+
                     <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={handleCart}>
                         Add to cart
                     </button>

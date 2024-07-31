@@ -62,6 +62,9 @@ function Navbar({ socket, user }) {
         setShowNotifications((prev) => !prev);
     };
 
+    console.log('Profile SVG Path:', profileSvg);
+
+
     return (
         <nav className="sticky top-0 bg-slate-500 text-xl flex justify-between z-50">
             <div className="flex justify-start space-x-11 h-20 mx-3">
@@ -100,7 +103,7 @@ function Navbar({ socket, user }) {
                                 <img
                                     className="mr-2 size-5 flexjustify-center"
                                     src={profileSvg}
-                                    alt=""
+                                    alt="hi"
                                 />
                                 Account
                             </Link>
