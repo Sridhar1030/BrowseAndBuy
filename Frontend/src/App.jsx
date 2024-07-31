@@ -22,95 +22,100 @@ import ResetPassword from "./components/LogSign/ResetPassword";
 import YourItems from "./components/YourItems/YourItems";
 import { io } from "socket.io-client";
 import { SocketProvider } from "./contexts/SocketContext";
+import NotFoundPage from "./components/NotFoundPage/NotFoundPage";
 
 function App() {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user?._id
-  const [socket, setSocket] = useState(null);
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user?._id;
+    const [socket, setSocket] = useState(null);
 
-  useEffect(() => {
-    const newSocket = io("http://localhost:5000");
-    setSocket(newSocket);
-    return () => newSocket.close(); // Clean up the socket connection on unmount
-  }, []);
+    useEffect(() => {
+        const newSocket = io("http://localhost:5000");
+        setSocket(newSocket);
+        return () => newSocket.close();
+    }, []);
 
-  useEffect(() => {
-    if (socket && user) {
-      socket.emit("newUser", userId);
-    }
-  }, [socket, user]);
+    useEffect(() => {
+        if (socket && user) {
+            socket.emit("newUser", userId);
+        }
+    }, [socket, user]);
 
+    console.log("socket provider is ", SocketProvider);
 
+    return (
+        <Router>
+            <Navbar socket={socket} user={userId} />
+            <SocketProvider>
+                <Routes>
+                    <Route path="*" element={<NotFoundPage />} />
+                    <Route path="/" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route
+                        path="/forgot-password"
+                        element={<ForgotPassword />}
+                    />
+                    <Route
+                        path="/reset-password/:id/:token"
+                        element={<ResetPassword />}
+                    />
+                    <Route
+                        path="/home"
+                        element={<ProtectedRoute element={<Home />} />}
+                    />
+                    <Route
+                        path="/chat"
+                        element={<ProtectedRoute element={<Chat />} />}
+                    />
 
-  console.log("socket provider is ", SocketProvider)
-
-  return (
-    <Router>
-      <Navbar socket={socket} user={userId} />
-      <SocketProvider >
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:id/:token" element={<ResetPassword />} />
-          <Route
-            path="/home"
-            element={<ProtectedRoute element={<Home />} />}
-          />
-          <Route
-            path="/chat"
-            element={<ProtectedRoute element={<Chat />} />}
-          />
-
-          <Route
-            path="/AdminImages"
-            element={<ProtectedRoute element={<AdminImages />} />}
-          />
-          <Route
-            path="/purchase"
-            element={<ProtectedRoute element={<Purchase />} />}
-          />
-          <Route
-            path="/form/ImageUpload"
-            element={<ProtectedRoute element={<ImageUpload />} />}
-          />
-          <Route
-            path="/orders"
-            element={<ProtectedRoute element={<Order />} />}
-          />
-          <Route
-            path="/account"
-            element={<ProtectedRoute element={<Account />} />}
-          />
-          <Route
-            path="/purchase/book"
-            element={<ProtectedRoute element={<Book />} />}
-          />
-          <Route
-            path="/purchase/instruments"
-            element={<ProtectedRoute element={<Instruments />} />}
-          />
-          <Route
-            path="/purchase/labcoats"
-            element={<ProtectedRoute element={<Labcoats />} />}
-          />
-          <Route
-            path="/form"
-            element={<ProtectedRoute element={<Form />} />}
-          />
-          <Route
-            path="/cart"
-            element={<ProtectedRoute element={<Cart />} />}
-          />
-          <Route
-            path="/selling"
-            element={<ProtectedRoute element={<YourItems />} />}
-          />
-        </Routes>
-
-      </SocketProvider>
-    </Router>
-  );
+                    <Route
+                        path="/AdminImages"
+                        element={<ProtectedRoute element={<AdminImages />} />}
+                    />
+                    <Route
+                        path="/purchase"
+                        element={<ProtectedRoute element={<Purchase />} />}
+                    />
+                    <Route
+                        path="/form/ImageUpload"
+                        element={<ProtectedRoute element={<ImageUpload />} />}
+                    />
+                    <Route
+                        path="/orders"
+                        element={<ProtectedRoute element={<Order />} />}
+                    />
+                    <Route
+                        path="/account"
+                        element={<ProtectedRoute element={<Account />} />}
+                    />
+                    <Route
+                        path="/purchase/book"
+                        element={<ProtectedRoute element={<Book />} />}
+                    />
+                    <Route
+                        path="/purchase/instruments"
+                        element={<ProtectedRoute element={<Instruments />} />}
+                    />
+                    <Route
+                        path="/purchase/labcoats"
+                        element={<ProtectedRoute element={<Labcoats />} />}
+                    />
+                    <Route
+                        path="/form"
+                        element={<ProtectedRoute element={<Form />} />}
+                    />
+                    <Route
+                        path="/cart"
+                        element={<ProtectedRoute element={<Cart />} />}
+                    />
+                    <Route
+                        path="/selling"
+                        element={<ProtectedRoute element={<YourItems />} />}
+                    />
+                </Routes>
+            </SocketProvider>
+        </Router>
+    );
 }
 
 export default App;
