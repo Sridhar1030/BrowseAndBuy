@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import profileSvg from '../../assets/profile.svg';
 import CartNumber from './CartNumber'; // Adjust the import path as necessary
 import { useEffect } from 'react';
+import Notification from '../../assets/notification.svg'
 
 
 function Navbar({ socket, user }) {
