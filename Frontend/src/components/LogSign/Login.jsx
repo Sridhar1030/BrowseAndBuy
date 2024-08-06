@@ -11,22 +11,18 @@ function Login() {
     const [password, setPassword] = useState("");
 
     const login = async () => {
-        const url = "/api/auth/login";
-        const data =
-            email !== "" ? { email, password } : { username, password };
-
+        const baseURL = import.meta.env.VITE_API_BASE_URL;
+        const url = `${baseURL}/auth/login`;
+        const data = email !== "" ? { email, password } : { username, password };
 
         try {
             const res = await axios.post(url, data);
-            const user = res.data.data.user
+            const user = res.data.data.user;
             if (res.status === 201) {
-                console.log(res)
+                console.log(res);
                 if (res.data.data.accessToken && res.data.data.refreshToken) {
-                    localStorage.setItem(
-                        "accessToken",
-                        res.data.data.accessToken
-                    );
-                    localStorage.setItem('user', JSON.stringify(user));
+                    localStorage.setItem("accessToken", res.data.data.accessToken);
+                    localStorage.setItem("user", JSON.stringify(user));
                     Cookies.set("accessToken", res.data.data.accessToken);
 
                     navigate("/home");
@@ -45,28 +41,20 @@ function Login() {
             <div className="bg-white p-8 rounded shadow-md w-96">
                 <h2 className="text-2xl font-semibold mb-4">Login</h2>
                 <form>
-                    {email !== "" && (
-                        <div className="mb-4">
-                            <label
-                                htmlFor="email"
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="mt-1 p-2 w-full border rounded"
-                                placeholder="Enter your email"
-                            />
-                        </div>
-                    )}
                     <div className="mb-4">
-                        <label
-                            htmlFor="username"
-                            className="block text-sm font-medium text-gray-700"
-                        >
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="mt-1 p-2 w-full border rounded"
+                            placeholder="Enter your email"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                             Username
                         </label>
                         <input
@@ -78,10 +66,7 @@ function Login() {
                         />
                     </div>
                     <div className="mb-4">
-                        <label
-                            htmlFor="password"
-                            className="block text-sm font-medium text-gray-700"
-                        >
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                             Password
                         </label>
                         <input
@@ -101,17 +86,11 @@ function Login() {
                     Log In
                 </button>
                 <p className="mt-2">Do not have an account?</p>
-                <Link
-                    to="/signup"
-                    className="text-blue-500 hover:underline flex"
-                >
+                <Link to="/signup" className="text-blue-500 hover:underline flex">
                     Register
                 </Link>
                 <div className="mt-4">
-                    <Link
-                        to="/forgot-password"
-                        className="text-blue-500 hover:underline"
-                    >
+                    <Link to="/forgot-password" className="text-blue-500 hover:underline">
                         Forgot Password?
                     </Link>
                 </div>
