@@ -11,7 +11,7 @@ function Login() {
     const [password, setPassword] = useState("");
 
     const login = async () => {
-        const url = "/api/auth/login";
+        const url = "https://browseandbuy-1.onrender.com/api/auth/login";
         const data =
             email !== "" ? { email, password } : { username, password };
 

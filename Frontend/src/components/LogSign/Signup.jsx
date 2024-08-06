@@ -44,7 +44,7 @@ const Signup = () => {
                 return
             }
 
-            const url = "/api/auth/signup";
+            const url = "https://browseandbuy-1.onrender.com/api/auth/signup";
             const response = await axios.post(url, formData);
             // console.log(response);
             setMessage(response.data.message);
