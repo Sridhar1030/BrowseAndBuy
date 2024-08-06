@@ -114,7 +114,7 @@ function ImageUpload() {
 
     try {
       console.log("Sending images to the backend...");
-      const response = await axios.post('/api/users/upload', formDataForUpload, {
+      const response = await axios.post('https://browseandbuy-1.onrender.com/api/users/upload', formDataForUpload, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
