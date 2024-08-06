@@ -22,7 +22,10 @@ import chatRoute from "./routes/ChatRoute.js"
 import messageRoute from "./routes/messageRoute.js"
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: ["https://browse-and-buy.vercel.app/"],
+    credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
