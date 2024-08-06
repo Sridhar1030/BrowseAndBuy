@@ -11,7 +11,7 @@ function Login() {
 
     const login = async () => {
         const baseURL = import.meta.env.VITE_API_BASE_URL;
-        const url = `${baseURL}/auth/login`;
+        const url = "https://browseandbuy-1.onrender.com/api/auth/login";
         const data = { username, password };
 
         try {
