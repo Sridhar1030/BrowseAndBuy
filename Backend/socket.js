@@ -4,7 +4,7 @@ import User from "./models/User.js";
 import Notification from "./models/Notification.js"; // Import the Notification model
 const io = new Server({
     cors: {
-        origin: "http://localhost:5173",
+        origin: "*",
         // origin: "http://localhost:3000"
     },
 });
