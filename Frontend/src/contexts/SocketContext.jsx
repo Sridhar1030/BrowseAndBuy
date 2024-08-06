@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
-const baseURL = 'http://localhost:3000';
+const baseURL = 'https://browseandbuy-1.onrender.com';
 const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
