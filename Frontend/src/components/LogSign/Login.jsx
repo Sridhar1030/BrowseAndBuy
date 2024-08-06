@@ -11,10 +11,10 @@ function Login() {
     const [password, setPassword] = useState("");
 
     const login = async () => {
-        const url = "sridhars-projects-b4747b22/browse-and-buy/api/auth/login";
+        const url = "/api/auth/login";
         const data =
             email !== "" ? { email, password } : { username, password };
-        
+
 
         try {
             const res = await axios.post(url, data);
@@ -108,12 +108,12 @@ function Login() {
                     Register
                 </Link>
                 <div className="mt-4">
-                <Link
-                    to="/forgot-password"
-                    className="text-blue-500 hover:underline"
-                >
-                    Forgot Password?
-                </Link>
+                    <Link
+                        to="/forgot-password"
+                        className="text-blue-500 hover:underline"
+                    >
+                        Forgot Password?
+                    </Link>
                 </div>
             </div>
         </div>

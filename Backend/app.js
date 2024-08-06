@@ -41,6 +41,9 @@ app.use("/api/message",messageRoute)
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
+app.get("/api/testing" , (req,res)=>{
+    res.send("testing")
+})
 
 // Export the app for use in other files (if needed)
 export default app;
