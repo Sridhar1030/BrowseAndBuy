@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api": "https://browseandbuy-1.onrender.com/"
+      "/api": "https://browseandbuy-1.onrender.com"
     }
   }
 })
