@@ -58,7 +58,7 @@ function ImageUpload() {
         return;
       }
 
-      const url = "/api/sell";
+      const url = "https://browseandbuy-1.onrender.com/api/sell";
       const user = JSON.parse(localStorage.getItem("user"));
       const userId = user ? user._id : null;
 
