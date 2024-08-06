@@ -11,7 +11,7 @@ function Login() {
     const [password, setPassword] = useState("");
 
     const login = async () => {
-        const url = "/api/auth/login";
+        const url = "sridhars-projects-b4747b22/browse-and-buy/api/auth/login";
         const data =
             email !== "" ? { email, password } : { username, password };
         
