@@ -1,22 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import Menu from '../Menu/Menu';
 import MainCard from './MainCard';
+import axios from 'axios';
 
 function Purchase() {
     const [items, setitems] = useState([]);
     const [filtereditems, setFiltereditems] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [isEmpty, setIsEmpty] = useState(false); // State to track if filtereditems is empty
+    const baseURL = import.meta.env.VITE_API_URL;
+    const url = `${baseURL}/api/items`;
 
     useEffect(() => {
-        fetch('/api/items/')
-            .then(response => response.json())
-            .then(data => {
-                setitems(data);
-                setFiltereditems(data); // Initialize filtereditems with all items
-            })
-            .catch(error => console.error('Error fetching items:', error));
-    }, []);
+        const fetchItem = async () => {
+            const baseURL = import.meta.env.VITE_API_URL;
+            const url = `${baseURL}/items/`;
+            const response = await axios.get(url)
+            // console.log(response.data)
+            setitems(response.data);
+            setFiltereditems(response.data)
+        }
+
+        fetchItem()
+
+    }, [])
+
+    // useEffect(() => {
+    //     fetch('/api/items/')
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             setitems(data);
+    //             setFiltereditems(data); // Initialize filtereditems with all items
+    //         })
+    //         .catch(error => console.error('Error fetching items:', error));
+    // }, []);
 
     const handleSearch = (event) => {
         event.preventDefault(); // Prevent form submission

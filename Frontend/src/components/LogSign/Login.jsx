@@ -12,6 +12,7 @@ function Login() {
     const login = async () => {
         const baseURL = import.meta.env.VITE_API_URL;
         const url = `${baseURL}/auth/login`;
+        console.log(url)
         const data = { username, password };
 
         try {
