@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-function Conversation({ data, currentUser, online  }) {
+function Conversation({ data, currentUser, online, username  }) {
     const [userData, setUserData] = useState(null);
 
     useEffect(() => {
@@ -35,8 +35,8 @@ function Conversation({ data, currentUser, online  }) {
                 <div className="relative">
                     {online && <div className="online-dot"></div>}
                     <img
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6FBxkzNCzOLEne4y_eQxAohbi3bjDrLYaTw&s"
-                        alt="Profile"
+                            src={`https://ui-avatars.com/api/?name=${userData?.username}`}
+                            alt="Profile"
                         className="w-12 h-12 rounded-full"
                     />
                 </div>
