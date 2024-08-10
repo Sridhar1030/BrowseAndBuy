@@ -90,15 +90,21 @@ function Navbar({ socket, user }) {
                         <button>
                             <Link to="/form">Sell</Link>
                         </button>
-                        <button>
-                            <Link to="/AdminImages">admin</Link>
-                        </button>
+                        
                         <button>
                             <Link to="/orders">Your orders</Link>
                         </button>
                         <button>
                             <Link to="/selling">Your Items</Link>
                         </button>
+                        {
+                            user?.isAdmin==true&&(
+
+                                <button>
+                            <Link to="/AdminImages">admin</Link>
+                        </button>
+                            )
+                        }
                         <button>
                             <Link
                                 to="/account"
