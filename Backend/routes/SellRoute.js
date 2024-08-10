@@ -57,5 +57,8 @@ router.put("/:id/approve", async (req, res) => {
         res.status(500).json({ message: "Approval failed", error });
     }
 });
+router.get("/testingSell" , (req,res)=>{
+    res.send("testing")
+})
 
 export default router;
