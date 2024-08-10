@@ -58,7 +58,7 @@ function ImageUpload() {
         return;
       }
       const baseURL = import.meta.env.VITE_API_URL;
-      const url = `${baseURL}/api/sell`;
+      const url = `${baseURL}/sell`;
       const user = JSON.parse(localStorage.getItem("user"));
       const userId = user ? user._id : null;
 
