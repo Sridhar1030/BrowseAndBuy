@@ -12,7 +12,7 @@ import Form from "./components/Sell/Form/Form";
 import Login from "./components/LogSign/Login";
 import Signup from "./components/LogSign/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
-import AdminImages from "./components/Sell/AdminImages";
+import AdminImages from "./components/Purchase/AdminImages";
 import Labcoats from "./components/Purchase/Labcoats/Labcoats";
 import Cart from "./components/Cart/Cart";
 import Navbar from "./components/Navbar/Navbar";

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Menu from '../Menu/Menu';
-import MainCard from './MainCard';
+import AdminCard from './AdminCard';
 import axios from 'axios';
 
-function Purchase() {
+function AdminImages() {
     const [items, setitems] = useState([]);
     const [filtereditems, setFiltereditems] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -16,10 +16,9 @@ function Purchase() {
             const baseURL = import.meta.env.VITE_API_URL;
             const url = `${baseURL}/items/`;
             const response = await axios.get(url)
-            const approvedItems = response.data.filter(item=>item.Approved===true);
             // console.log(response.data)
-            setitems(approvedItems);
-            setFiltereditems(approvedItems)
+            setitems(response.data);
+            setFiltereditems(response.data)
         }
 
         fetchItem()
@@ -94,7 +93,7 @@ function Purchase() {
                         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6'>
                             {filtereditems.map((item, index) => (
                                 <div key={item._id} className='mb-4'>
-                                    <MainCard item={item} />
+                                    <AdminCard item={item} />
                                 </div>
                             ))}
                         </div>
@@ -105,4 +104,4 @@ function Purchase() {
     );
 }
 
-export default Purchase;
+export default AdminImages;

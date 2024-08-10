@@ -50,7 +50,7 @@ router.put("/:id/approve", async (req, res) => {
         }
         res.status(200).json({
             message: "Item approved successfully",
-            item: updatedItem,
+            item: updatedItems,
         })
     } catch (error) {
         console.error("Error approving item:", error);
