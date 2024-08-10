@@ -91,6 +91,9 @@ function Navbar({ socket, user }) {
                             <Link to="/form">Sell</Link>
                         </button>
                         <button>
+                            <Link to="/AdminImages">admin</Link>
+                        </button>
+                        <button>
                             <Link to="/orders">Your orders</Link>
                         </button>
                         <button>
