@@ -9,7 +9,7 @@ const userId = user ? user._id : null;
 const socket = io(baseURL);
 
 export const useCartStore = create((set, get) => ({
-    cartNumber: 0,
+    cartNumber: 10,
     cartItems: [],
     // setupSocket: () => {
     //     if (user) {
