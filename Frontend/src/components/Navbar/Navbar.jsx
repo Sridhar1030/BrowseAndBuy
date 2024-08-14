@@ -154,7 +154,7 @@ function Navbar({ socket, user }) {
                     )}
                 </div>
 
-                <button>
+                {/* <button>
                     <CartNumber />
                     <Link
                         to="/cart"
@@ -167,7 +167,7 @@ function Navbar({ socket, user }) {
                             alt="shopping-cart--v1"
                         />
                     </Link>
-                </button>
+                </button> */}
                 <button onClick={handleLogout} className="hover:text-red-500">
                     Logout
                 </button>
