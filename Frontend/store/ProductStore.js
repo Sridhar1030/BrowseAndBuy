@@ -1,14 +1,16 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const baseURL = "/api";
+const baseURL = import.meta.env.VITE_API_URL;
+// const url = `${baseURL}/api/items`;
+
 const user = JSON.parse(localStorage.getItem("user"));
 const userId = user ? user._id : null;
 console.log("user id is " , userId)
 export const useProductCart = create((set) => ({
     fetchSellingItems: async () => {
         try {
-            const response = await axios.get(`${baseURL}/api/uploadedItems`, {
+            const response = await axios.get(`${baseURL}/uploadedItems`, {
                 params: { userId },
             });
             console.log("Response from fetchSellingItems:", response.data);

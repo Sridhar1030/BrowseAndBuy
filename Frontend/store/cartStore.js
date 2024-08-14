@@ -3,7 +3,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { io } from "socket.io-client"; // Import io
 
-const baseURL = "/api";
+const baseURL = import.meta.env.VITE_API_URL;
+// const url = `${baseURL}/api/items`;
+
 const user = JSON.parse(localStorage.getItem("user"));
 const userId = user ? user._id : null;
 const socket = io(baseURL);
