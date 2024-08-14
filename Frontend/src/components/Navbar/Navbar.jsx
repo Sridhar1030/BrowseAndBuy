@@ -4,7 +4,7 @@ import profileSvg from '../../assets/profile.svg';
 import CartNumber from './CartNumber'; // Adjust the import path as necessary
 import { useEffect } from 'react';
 import Notification from '../../assets/notification.svg'
-
+import Cart from '../../assets/image/cart.png'
 
 function Navbar({ socket, user }) {
     const navigate = useNavigate();
@@ -163,7 +163,7 @@ function Navbar({ socket, user }) {
                         <img
                             width={30}
                             height={30}
-                            src="https://img.icons8.com/ios/50/shopping-cart--v1.png"
+                            src={Cart}
                             alt="shopping-cart--v1"
                         />
                     </Link>
