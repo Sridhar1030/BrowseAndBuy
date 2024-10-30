@@ -1,18 +1,22 @@
 import { Schema, model } from "mongoose";
-const orderSchema = new Schema({
-    F_Name: String,
-    Image_ID: String,
-    Item_Name: String,
-    L_Name: String,
-    category: String,
-    phone: Number,
-    price: Number,
-    semester: Number,
-    Approved: { type: Boolean, default: false },
-    UserId:String,
-    Bought:{type: Boolean, default:false},
-    
-},{timestamps: true});
+
+// Update your Orders schema to properly reference Sell and User
+const orderSchema = new Schema(
+    {
+        productId: {
+            type: Schema.Types.ObjectId,
+            ref: "Sell",
+            required: [true, "Product ID is required"],
+        },
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: [true, "User ID is required"],
+        },
+        bought: { type: Boolean, default: false },
+    },
+    { timestamps: true }
+);
 
 const Orders = model("Orders", orderSchema);
 

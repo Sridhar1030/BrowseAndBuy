@@ -6,7 +6,7 @@ import { purchase, bought } from "../controller/purchase.js";
 const router = Router();
 
 router.route("/purchase").post(purchase);
-router.route("/bought").get(bought);
+router.route("/bought/:userId").get(bought);
 
 
 export default router
