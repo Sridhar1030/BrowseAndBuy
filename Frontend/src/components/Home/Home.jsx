@@ -9,7 +9,6 @@ const Home = () => {
         
         <div className='heading'>
         <h1> online with <br /> <span> Browse and Buy </span></h1>
-        <p>Trusted by over 10,000 students worldwide</p>
         </div>
         <div className="middle">
             <div className="left">
