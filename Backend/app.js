@@ -23,7 +23,9 @@ import messageRoute from "./routes/messageRoute.js"
 import purchase  from "./routes/purchase.route.js";
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: "*"
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

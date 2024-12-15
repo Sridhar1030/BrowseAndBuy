@@ -67,7 +67,15 @@ function ChatBox({ chat, currentUser, setSendMessage, receivedMessage }) {
 
         try {
             const response = await axios.post("api/message/", message);
-            setMessages([...messages, response.data.data]);
+            const bytes = CryptoJS.AES.decrypt(
+                response.data.data.text,
+                import.meta.env.VITE_TOKEN_SECRET
+            );
+            const originalText = bytes.toString(CryptoJS.enc.Utf8);
+            setMessages([
+                ...messages,
+                { ...response.data.data, text: originalText },
+            ]);
             setNewMessage("");
         } catch (error) {
             console.error("Error sending message:", error);
@@ -78,7 +86,15 @@ function ChatBox({ chat, currentUser, setSendMessage, receivedMessage }) {
     useEffect(() => {
         console.log("Message Arrived: ", receivedMessage);
         if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
-            setMessages([...messages, receivedMessage]);
+            const bytes = CryptoJS.AES.decrypt(
+                receivedMessage.text,
+                import.meta.env.VITE_ACCESS_TOKEN_SECRET
+            );
+            const originalText = bytes.toString(CryptoJS.enc.Utf8);
+            setMessages([
+                ...messages,
+                { ...receivedMessage, text: originalText },
+            ]);
         }
     }, [receivedMessage]);
 
