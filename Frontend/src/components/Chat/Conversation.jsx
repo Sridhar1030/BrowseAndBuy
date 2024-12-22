@@ -11,7 +11,7 @@ function Conversation({ data, currentUser, online, username  }) {
         const getUser = async () => {
             try {
                 const res = await axios.post(
-                    `/api/auth/getUserData`,
+                    `${import.meta.env.VITE_API_URL}/auth/getUserData`,
                     { userId: userId },
                     {
                         headers: {

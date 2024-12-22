@@ -6,17 +6,25 @@ const notificationSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        receiverName: {
+        receiver: {
             type: String,
             required: true,
         },
-        
+        productName: {
+            type: String,
+            required: true,
+        },
         isRead: {
             type: Boolean,
             default: false,
         },
+        senderId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "users", // Refers to the User model
+            required: true,
+        },
     },
-    { timestamps: true }
+    { timestamps: true } // Automatically adds createdAt and updatedAt fields
 );
 
 const Notification = mongoose.model("Notification", notificationSchema);

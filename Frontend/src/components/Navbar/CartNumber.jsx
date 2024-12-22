@@ -10,7 +10,6 @@ const CartNumber = () => {
 
     return (
         <div className='-mb-2 -mr-1 flex justify-center text-sm'>
-            number
             {cartNumber}
         </div>
     );

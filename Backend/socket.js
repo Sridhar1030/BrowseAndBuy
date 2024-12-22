@@ -1,11 +1,10 @@
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 import User from "./models/User.js";
-import Notification from "./models/Notification.js"; // Import the Notification model
+import Notification from "./models/Notification.js"; 
 const io = new Server({
     cors: {
         origin: "*",
-        // origin: "http://localhost:3000"
     },
 });
 
@@ -21,7 +20,7 @@ const addNewUser = async (userId, socketId) => {
             );
             if (!userExists) {
                 onlineUsers.push({ user, socketId });
-                console.log("new user made", onlineUsers);
+                // console.log("new user made", onlineUsers);
                 // Check for unread notifications and send them
                 const unreadNotifications = await Notification.find({
                     receiverName: user.username,
@@ -47,7 +46,7 @@ const addNewUser = async (userId, socketId) => {
 // Remove a user by socketId
 const removeUser = (socketId) => {
     onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
-    console.log("left users", onlineUsers);
+    // console.log("left users", onlineUsers);
 };
 
 // Get a user by username (assuming the user object contains username and _id)
@@ -60,35 +59,57 @@ const setupSocket = (server) => {
     io.attach(server);
 
     io.on("connection", (socket) => {
-        console.log("a user connected");
+        console.log("a user connected in port 5000");
 
         socket.on("newUser", async (userId) => {
-            console.log(userId);
             await addNewUser(userId, socket.id);
         });
 
-        socket.on("sendNotification", async ({ senderName, receiverName }) => {
-            // Find receiver by username
-            const receiver = getUser(receiverName);
-            if (receiver && receiver.socketId) {
-                io.to(receiver.socketId).emit("getNotification", {
+        socket.on(
+            "sendNotification",
+            async ({ senderName, receiverName, productName, senderId }) => {
+                console.log("Received notification data:", {
                     senderName,
                     receiverName,
+                    productName,
+                    senderId
                 });
-                console.log(senderName);
-                console.log(receiver.socketId);
-            } else {
-                // Store the notification in the database if the user is offline
-                const newNotification = new Notification({
-                    senderName,
-                    receiverName,
-                });
-                await newNotification.save();
-                console.log(
-                    `User with username ${receiverName} not found. Notification saved to DB.`
-                );
+
+                const receiver = getUser(receiverName);
+                if (receiver && receiver.socketId) {
+                    io.to(receiver.socketId).emit("getNotification", {
+                        senderName,
+                        receiver: receiverName,
+                        productName,
+                        senderId,
+                        isRead: false
+                    });
+                } else {
+                    console.log("Creating new notification with data:", {
+                        senderName,
+                        receiver: receiverName,
+                        productName,
+                        senderId
+                    });
+
+                    const newNotification = new Notification({
+                        senderName,
+                        receiver: receiverName,
+                        productName,
+                        senderId
+                    });
+
+                    try {
+                        const savedNotification = await newNotification.save();
+                        console.log("Saved notification:", savedNotification);
+                    } catch (error) {
+                        console.error("Error saving notification:", error);
+                        console.error("Validation errors:", error.errors);
+                    }
+                }
             }
-        });
+        );
+
         socket.on("disconnect", () => {
             console.log("a user disconnected");
             removeUser(socket.id);
@@ -96,7 +117,6 @@ const setupSocket = (server) => {
     });
 };
 
-// Listen on port 5000
 io.listen(5000);
 
 export default setupSocket;

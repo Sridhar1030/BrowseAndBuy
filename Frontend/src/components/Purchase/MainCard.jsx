@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ImageCarousel from './ImageCarousel'; // Adjust import path
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,7 +10,8 @@ function MainCard({ item, onBuy, onCart }) {
     const socket = useSocket();
     const addCartItem = useCartStore(state => state.addCartItem);
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log("item is ", item)
+    const [notificationSent, setNotificationSent] = useState(false);
+
     const handleCart = async () => {
         const productData = {
             id: item._id,
@@ -36,12 +37,20 @@ function MainCard({ item, onBuy, onCart }) {
 
 
     const handleBuy = async () => {
-        console.log("buy clicked")
+        console.log("Sending notification with:", {
+            senderName: user.username,
+            senderId: user._id,
+            receiverName: item.F_Name,
+            productName: item.Item_Name,
+        });
+        
         socket.emit("sendNotification", {
             senderName: user.username,
+            senderId: user._id,
             receiverName: item.F_Name,
-
-        })
+            productName: item.Item_Name,
+        });
+        setNotificationSent(true);
     }
 
     return (

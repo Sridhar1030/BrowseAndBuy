@@ -10,7 +10,6 @@ function ChatBox({ chat, currentUser, setSendMessage, receivedMessage }) {
     const [newMessage, setNewMessage] = useState("");
 
     const scroll = useRef();
-
     useEffect(() => {
         if (chat) {
             const userId = chat?.members?.find((id) => id !== currentUser);
@@ -18,7 +17,7 @@ function ChatBox({ chat, currentUser, setSendMessage, receivedMessage }) {
             const getUser = async () => {
                 try {
                     const res = await axios.post(
-                        `/api/auth/getUserData`,
+                        `${import.meta.env.VITE_API_URL}/auth/getUserData`,
                         { userId: userId },
                         {
                             headers: {
@@ -67,14 +66,9 @@ function ChatBox({ chat, currentUser, setSendMessage, receivedMessage }) {
 
         try {
             const response = await axios.post("api/message/", message);
-            const bytes = CryptoJS.AES.decrypt(
-                response.data.data.text,
-                import.meta.env.VITE_TOKEN_SECRET
-            );
-            const originalText = bytes.toString(CryptoJS.enc.Utf8);
             setMessages([
                 ...messages,
-                { ...response.data.data, text: originalText },
+                { ...response.data.data, text: response.data.data.text },
             ]);
             setNewMessage("");
         } catch (error) {
@@ -86,14 +80,9 @@ function ChatBox({ chat, currentUser, setSendMessage, receivedMessage }) {
     useEffect(() => {
         console.log("Message Arrived: ", receivedMessage);
         if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
-            const bytes = CryptoJS.AES.decrypt(
-                receivedMessage.text,
-                import.meta.env.VITE_ACCESS_TOKEN_SECRET
-            );
-            const originalText = bytes.toString(CryptoJS.enc.Utf8);
             setMessages([
                 ...messages,
-                { ...receivedMessage, text: originalText },
+                { ...receivedMessage, text: receivedMessage.text },
             ]);
         }
     }, [receivedMessage]);
@@ -101,6 +90,10 @@ function ChatBox({ chat, currentUser, setSendMessage, receivedMessage }) {
     useEffect(() => {
         scroll.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
+
+    if (!currentUser || !chat) {
+        return <div className="flex items-center justify-center h-full"><h2 className="text-gray-500 text-lg">Select a chat to start messaging...</h2></div>;
+    }
 
     return (
         <div className="ChatBox-container">

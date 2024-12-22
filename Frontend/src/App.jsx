@@ -64,7 +64,7 @@ function App() {
                         element={<ProtectedRoute element={<Home />} />}
                     />
                     <Route
-                        path="/chat"
+                        path="/chat/:senderId"
                         element={<ProtectedRoute element={<Chat />} />}
                     />
 

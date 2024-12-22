@@ -21,6 +21,7 @@ import UploadedItems from "./routes/UploadedItems.js"
 import chatRoute from "./routes/ChatRoute.js"
 import messageRoute from "./routes/messageRoute.js"
 import purchase  from "./routes/purchase.route.js";
+import notification from "./routes/notification.routes.js"
 
 // Middleware
 app.use(cors({
@@ -40,6 +41,7 @@ app.use("/api" , UploadedItems)
 app.use("/api/chat",chatRoute)
 app.use("/api/message",messageRoute)
 app.use("/api/buy" ,purchase)
+app.use("/api/notification" , notification)
 
 // Example route
 app.get("/", (req, res) => {

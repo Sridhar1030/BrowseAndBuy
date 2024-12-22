@@ -162,15 +162,24 @@ const getUserData = asyncHandler(async (req, res) => {
 });
 
 const getAllUsers = asyncHandler(async (req, res) => {
-    const users = await User.find({}).select(
-        "-password -resetPasswordRequests -refreshToken -ProductId -BoughtProductId -__v -isAdmin"
-    );
+    console.log("Request received to fetch all users");
 
-    if (!users) {
-        throw new ApiError(404, "Users not found");
+    try {
+        // Fetch all users excluding sensitive and unnecessary fields
+        const users = await User.find({})
+            .select("-password -resetPasswordRequests -refreshToken -ProductId -BoughtProductId -__v -isAdmin");
+
+        if (!users || users.length === 0) {
+            console.error("No users found in the database");
+            throw new ApiError(404, "Users not found");
+        }
+
+        console.log(`Successfully fetched ${users.length} user(s)`);
+        return res.status(200).json(new ApiResponse(200, "All users", users));
+    } catch (error) {
+        console.error("Error fetching users:", error.message);
+        throw error; // Let the global error handler manage this
     }
-
-    return res.status(200).json(new ApiResponse(200, "All users", users));
 });
 
 const changePassword = asyncHandler(async (req, res) => {

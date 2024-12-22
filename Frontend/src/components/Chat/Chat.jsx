@@ -5,6 +5,7 @@ import axios from "axios";
 import Conversation from "./Conversation.jsx";
 import ChatBox from "./ChatBox.jsx";
 import { io } from "socket.io-client";
+import { useParams } from 'react-router-dom';
 
 function Chat() {
     const [chats, setChats] = useState([]);
@@ -19,6 +20,7 @@ function Chat() {
             ? JSON.parse(localStorage.getItem("user"))
             : null
     );
+    const { senderId } = useParams();
 
     useEffect(() => {
         setUser(
@@ -67,6 +69,36 @@ function Chat() {
             setSendMessage(null);
         }
     }, [sendMessage]);
+
+    useEffect(() => {
+        const createChat = async () => {
+            if (senderId && user?._id) {
+                try {
+                    const existingChat = chats.find(chat => 
+                        chat.members.includes(senderId) && chat.members.includes(user._id)
+                    );
+
+                    if (existingChat) {
+                        setCurrentChat(existingChat);
+                        return;
+                    }
+
+                    const response = await axios.post("/api/chat/", {
+                        senderId: user._id,
+                        receiverId: senderId
+                    });
+
+                    const newChat = response.data.data;
+                    setChats(prev => [...prev, newChat]);
+                    setCurrentChat(newChat);
+                } catch (error) {
+                    console.error("Error creating chat:", error);
+                }
+            }
+        };
+
+        createChat();
+    }, [senderId, user?._id, chats]);
 
     const handleNewChat = (newChat) => {
         setChats((prevChats) => [...prevChats, newChat]);

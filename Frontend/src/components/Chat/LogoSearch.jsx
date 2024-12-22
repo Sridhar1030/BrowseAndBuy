@@ -12,7 +12,7 @@ const LogoSearch = ({ onNewChat }) => {
 
     useEffect(() => {
         axios
-            .get("/api/auth/allUser", {
+            .get(`${import.meta.env.VITE_API_URL}/auth/allUser`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -41,7 +41,7 @@ const LogoSearch = ({ onNewChat }) => {
                 senderId: currentUser._id,
                 receiverId: user._id,
             });
-            onNewChat(response.data.data); 
+            onNewChat(response.data.data);
             navigate("/chat");
         } catch (error) {
             console.error("Error creating chat:", error);

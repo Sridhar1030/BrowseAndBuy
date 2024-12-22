@@ -42,17 +42,6 @@ function Navbar({ socket, user }) {
                 setNotifications((prev) => [...prev, data]);
             });
 
-            // Optional: Fetch unread notifications from server on login or specific page load
-            // const fetchUnreadNotifications = async () => {
-            //     const response = await fetch(`/api/notifications/${user._id}`);
-            //     const notifications = await response.json();
-            //     setNotifications(notifications);
-            // };
-
-            // if (user) {
-            //     fetchUnreadNotifications();
-            // }
-
             return () => {
                 socket.off("getNotification");
             };
@@ -62,6 +51,32 @@ function Navbar({ socket, user }) {
     const toggleNotifications = () => {
         setShowNotifications((prev) => !prev);
     };
+
+    const handleNotificationClick = async (notif, index) => {
+        try {
+            await fetch(`${import.meta.env.VITE_API_URL}/notification/markAsRead`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ notificationId: notif._id }),
+            });
+
+            // Update local state
+            setNotifications((prev) =>
+                prev.map((n, i) =>
+                    i === index ? { ...n, isRead: true } : n
+                )
+            );
+        } catch (err) {
+            console.error("Failed to mark notification as read:", err);
+        }
+    };
+
+    const chatWithUser = (senderId) => {
+        navigate(`/chat/${senderId}`);
+    };
+
 
     console.log('Profile SVG Path:', profileSvg);
 
@@ -90,7 +105,7 @@ function Navbar({ socket, user }) {
                         <button>
                             <Link to="/form">Sell</Link>
                         </button>
-                        
+
                         <button>
                             <Link to="/orders">Your orders</Link>
                         </button>
@@ -98,11 +113,11 @@ function Navbar({ socket, user }) {
                             <Link to="/selling">Your Items</Link>
                         </button>
                         {
-                            user?.isAdmin==true&&(
+                            user?.isAdmin == true && (
 
                                 <button>
-                            <Link to="/AdminImages">admin</Link>
-                        </button>
+                                    <Link to="/AdminImages">admin</Link>
+                                </button>
                             )
                         }
                         <button>
@@ -130,11 +145,11 @@ function Navbar({ socket, user }) {
                         className='size-6 cursor-pointer hover:animate-ring'
                         alt="Notification Icon"
                         onClick={toggleNotifications}
-                        />
-                        <span className="absolute -top-1 left-4 text-sm bg-red-400 text-white rounded-full px-1 py-0.5">
-                            {notifications.length}
-                        </span>
-                    
+                    />
+                    <span className="absolute -top-1 left-4 text-sm bg-red-400 text-white rounded-full px-1 py-0.5">
+                        {notifications.length}
+                    </span>
+
 
                     {showNotifications && (
                         <div className="absolute  bg-white border rounded shadow-lg p-3 w-64">
@@ -142,10 +157,24 @@ function Navbar({ socket, user }) {
                             {notifications.length > 0 ? (
                                 <ul>
                                     {notifications.map((notif, index) => (
-                                        <li key={index} className="mb-2">
-                                            <p><strong>{notif.senderName}</strong>: wants to buy</p>
+                                        <li
+                                            key={index}
+                                            className={`mb-2 p-2 ${notif.isRead ? "bg-gray-200" : "bg-blue-100"
+                                                }`}
+                                            onClick={() => handleNotificationClick(notif, index)}
+                                        >
+                                            <p>
+                                                <strong>{notif.senderName}</strong>: wants to buy
+                                            </p>
+                                            <button 
+                                                className="mt-2 bg-blue-500 text-white px-2 py-1 rounded"
+                                                onClick={() => chatWithUser(notif.senderId)}
+                                            >
+                                                Chat
+                                            </button>
                                         </li>
                                     ))}
+
                                 </ul>
                             ) : (
                                 <p>No new notifications</p>
@@ -153,7 +182,6 @@ function Navbar({ socket, user }) {
                         </div>
                     )}
                 </div>
-
                 <button>
                     <CartNumber />
                     <Link
