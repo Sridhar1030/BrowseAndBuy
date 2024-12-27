@@ -112,9 +112,11 @@ function ImageUpload() {
       formDataForUpload.append(`image`, image); // Ensure backend expects this field name
     });
 
+    const base_url = import.meta.env.VITE_API_URL;
+
     try {
       console.log("Sending images to the backend...");
-      const response = await axios.post('https://browseandbuy-1.onrender.com/api/users/upload', formDataForUpload, {
+      const response = await axios.post(`${base_url}/api/users/upload`, formDataForUpload, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+}
+
+[data-theme="dark"] {
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 100%;
+}

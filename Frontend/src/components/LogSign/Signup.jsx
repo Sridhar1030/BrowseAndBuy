@@ -43,8 +43,8 @@ const Signup = () => {
                 setError("Invalid Email Address")
                 return
             }
-
-            const url = "https://browseandbuy-1.onrender.com/api/auth/signup";
+            const base_url = import.meta.env.VITE_API_URL;
+            const url = `${base_url}/auth/signup`;
             const response = await axios.post(url, formData);
             // console.log(response);
             setMessage(response.data.message);

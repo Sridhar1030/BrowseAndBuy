@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
-const baseURL = 'http://localhost:5000';
+const baseURL = import.meta.env.VITE_API_URL;
 const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {

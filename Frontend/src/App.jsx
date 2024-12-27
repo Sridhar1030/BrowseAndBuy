@@ -30,7 +30,7 @@ function App() {
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
-        const newSocket = io("http://localhost:5000");
+        const newSocket = io(`${import.meta.env.VITE_API_URL}`);
         setSocket(newSocket);
         return () => newSocket.close();
     }, []);
@@ -65,6 +65,10 @@ function App() {
                     />
                     <Route
                         path="/chat/:senderId"
+                        element={<ProtectedRoute element={<Chat />} />}
+                    />
+                    <Route
+                        path="/chat"
                         element={<ProtectedRoute element={<Chat />} />}
                     />
 

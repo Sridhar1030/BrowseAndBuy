@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      colors: {
+        'card': 'hsl(var(--card))',
+        'card-foreground': 'hsl(var(--card-foreground))',
+      },
       animation: {
         'ring': 'ring 0.5s ease-in-out',
       },

@@ -182,6 +182,52 @@ const getAllUsers = asyncHandler(async (req, res) => {
     }
 });
 
+const searchUsers = async (req, res) => {
+    try {
+        const { query } = req.query;
+        const currentUserId = req.user._id; 
+
+        if (!query) {
+            return res.status(200).json({ 
+                success: true, 
+                data: [] 
+            });
+        }
+
+        // Using index for username field for better performance
+        const users = await User.find({
+            $and: [
+                { 
+                    username: { 
+                        $regex: query, 
+                        $options: 'i' 
+                    } 
+                },
+                { 
+                    _id: { 
+                        $ne: currentUserId 
+                    } 
+                }
+            ]
+        })
+        .select('username email _id')
+        .limit(10); // Limiting results for better performance
+
+        res.status(200).json({
+            success: true,
+            data: users
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error searching users',
+            error: error.message
+        });
+    }
+};
+
+
+
 const changePassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword, confirmPassword } = req.body;
 
@@ -357,4 +403,5 @@ export {
     deleteAccount,
     getUserData,
     getAllUsers,
+    searchUsers
 };
