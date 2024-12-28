@@ -319,7 +319,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
     const token = jwt.sign({ email, _id: user._id }, secret, {
         expiresIn: "5m",
     });
-    const link = `https://browse-and-buy.vercel.app/reset-password/${user._id}/${token}`;
+    const link = `http://localhost:5173/reset-password/${user._id}/${token}`;
 
     sendEmail(link, email)
         .then((data) => {

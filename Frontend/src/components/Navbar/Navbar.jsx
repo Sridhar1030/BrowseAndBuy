@@ -1,42 +1,57 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import profileSvg from '../../assets/profile.svg';
-import CartNumber from './CartNumber'; // Adjust the import path as necessary
-import { useEffect } from 'react';
-import Notification from '../../assets/notification.svg'
-import Cart from '../../assets/image/cart.png'
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+    Bell,
+    ShoppingCart,
+    LogOut,
+    User,
+    Package,
+    Store,
+    Home,
+    Plus,
+    Box,
+    MessageCircle
+} from "lucide-react";
 
-function Navbar({ socket, user }) {
+const Navbar = ({ socket, user }) => {
     const navigate = useNavigate();
-
     const [notifications, setNotifications] = useState([]);
     const [showNotifications, setShowNotifications] = useState(false);
-    const handleLogout = async () => {
-        try {
-            const response = await axios.get(
-                "/api/auth/logout",
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                    },
-                }
-            );
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
 
-            console.log(response.data);
-
-            alert(response.data.message);
-        } catch (error) {
-            console.error("Error logging out:", error);
-            alert("An error occurred. Please try again.");
-        }
-        localStorage.clear();
-        navigate("/");
-    };
-
-
-
+    // Combined authentication and user check
     useEffect(() => {
+        const checkAuthAndUser = () => {
+            const token = localStorage.getItem("accessToken");
+            const storedUser = localStorage.getItem("user");
+            
+            if (token && storedUser) {
+                setIsAuthenticated(true);
+                setCurrentUser(JSON.parse(storedUser));
+            } else {
+                setIsAuthenticated(false);
+                setCurrentUser(null);
+            }
+        };
+
+        checkAuthAndUser();
+        
+        // Check auth status every time component mounts or updates
+        const interval = setInterval(checkAuthAndUser, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    // Scroll and notification handlers
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 20);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
         if (socket) {
             socket.on("getNotification", (data) => {
                 setNotifications((prev) => [...prev, data]);
@@ -44,164 +59,182 @@ function Navbar({ socket, user }) {
 
             return () => {
                 socket.off("getNotification");
+                window.removeEventListener("scroll", handleScroll);
             };
         }
-    }, [socket, user]);
 
-    const toggleNotifications = () => {
-        setShowNotifications((prev) => !prev);
-    };
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, [socket]);
 
-    const handleNotificationClick = async (notif, index) => {
+    const handleLogout = async () => {
         try {
-            await fetch(`${import.meta.env.VITE_API_URL}/notification/markAsRead`, {
-                method: "PUT",
+            const base_url = import.meta.env.VITE_API_URL;
+            const response = await fetch(`${base_url}/auth/logout`, {
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
-                body: JSON.stringify({ notificationId: notif._id }),
             });
 
-            // Update local state
-            setNotifications((prev) =>
-                prev.map((n, i) =>
-                    i === index ? { ...n, isRead: true } : n
-                )
-            );
-        } catch (err) {
-            console.error("Failed to mark notification as read:", err);
+            const data = await response.json();
+            localStorage.clear();
+            setIsAuthenticated(false);
+            setCurrentUser(null);
+            navigate("/");
+            alert(data.message);
+        } catch (error) {
+            console.error("Error logging out:", error);
+            alert("An error occurred. Please try again.");
         }
     };
 
-    const chatWithUser = (senderId) => {
-        navigate(`/chat/${senderId}`);
-    };
+    const navClassName = `
+        sticky top-0 z-50 transition-all duration-300
+        ${isScrolled ? "bg-white shadow-lg" : "bg-slate-50"}
+    `;
 
-
-    console.log('Profile SVG Path:', profileSvg);
-
+    const linkClassName = "flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-slate-100 transition-colors";
+    const buttonClassName = "flex items-center gap-2 px-4 py-2 rounded-lg transition-colors hover:bg-slate-100";
 
     return (
-        <nav className="sticky top-0 bg-slate-500 text-xl flex justify-between z-50">
-            <div className="flex justify-start space-x-11 h-20 mx-3">
-                <div className="flex justify-center align-middle">
-                    <button>
-                        <Link
-                            to="/home"
-                            className="text-2xl flex justify-center align-middle"
-                        >
-                            <img
-                                className="size-10"
-                                src="https://cdn-icons-png.flaticon.com/512/9752/9752709.png"
-                                alt=""
-                            />
+        <nav className={navClassName}>
+            <div className="max-w-7xl mx-auto px-4">
+                <div className="flex items-center justify-between h-16">
+                    {/* Logo and brand */}
+                    <Link to="/home" className="flex items-center space-x-3">
+                        <Store className="h-8 w-8 text-blue-600" />
+                        <span className="text-xl font-bold text-gray-800">
                             Browse And Buy
+                        </span>
+                    </Link>
+
+                    {/* Main navigation */}
+                    <div className="hidden md:flex items-center space-x-4">
+                        <Link to="/home" className={linkClassName}>
+                            <Home size={20} />
+                            <span>Home</span>
                         </Link>
-                    </button>
-                    <div className="flex text-lg ml-14 space-x-10">
-                        <button>
-                            <Link to="/purchase">Purchase</Link>
-                        </button>
-                        <button>
-                            <Link to="/form">Sell</Link>
-                        </button>
 
-                        <button>
-                            <Link to="/orders">Your orders</Link>
-                        </button>
-                        <button>
-                            <Link to="/selling">Your Items</Link>
-                        </button>
-                        {
-                            user?.isAdmin == true && (
+                        {isAuthenticated && (
+                            <>
+                                <Link to="/purchase" className={linkClassName}>
+                                    <Package size={20} />
+                                    <span>Purchase</span>
+                                </Link>
+                                <Link to="/form" className={linkClassName}>
+                                    <Plus size={20} />
+                                    <span>Sell</span>
+                                </Link>
+                                <Link to="/orders" className={linkClassName}>
+                                    <Box size={20} />
+                                    <span>Orders</span>
+                                </Link>
+                            </>
+                        )}
+                    </div>
 
-                                <button>
-                                    <Link to="/AdminImages">admin</Link>
+                    {/* Right side icons */}
+                    <div className="flex items-center space-x-4">
+                        {isAuthenticated ? (
+                            <>
+                                {/* Chat */}
+                                <Link to="/chat" className={buttonClassName}>
+                                    <MessageCircle size={20} />
+                                    <span className="sr-only">Chat</span>
+                                </Link>
+
+                                {/* Notifications */}
+                                <div className="relative">
+                                    <button
+                                        onClick={() => setShowNotifications(!showNotifications)}
+                                        className={buttonClassName}
+                                    >
+                                        <Bell size={20} />
+                                        {notifications.length > 0 && (
+                                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                                {notifications.length}
+                                            </span>
+                                        )}
+                                    </button>
+
+                                    {showNotifications && (
+                                        <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-100 overflow-hidden">
+                                            <div className="p-4 border-b border-gray-100">
+                                                <h3 className="font-semibold">Notifications</h3>
+                                            </div>
+                                            <div className="max-h-96 overflow-y-auto">
+                                                {notifications.length > 0 ? (
+                                                    notifications.map((notif, index) => (
+                                                        <div
+                                                            key={index}
+                                                            className="p-4 border-b border-gray-100 hover:bg-gray-50"
+                                                        >
+                                                            <p className="text-sm">
+                                                                <span className="font-semibold">
+                                                                    {notif.senderName}
+                                                                </span>{" "}
+                                                                wants to buy
+                                                            </p>
+                                                            <button
+                                                                onClick={() => navigate(`/chat/${notif.senderId}`)}
+                                                                className="mt-2 text-sm text-blue-600 hover:text-blue-800"
+                                                            >
+                                                                Chat now
+                                                            </button>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <p className="p-4 text-sm text-gray-500">
+                                                        No new notifications
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Cart */}
+                                <Link to="/cart" className={buttonClassName}>
+                                    <ShoppingCart size={20} />
+                                </Link>
+
+                                {/* Account */}
+                                <Link to="/account" className={buttonClassName}>
+                                    <User size={20} />
+                                </Link>
+
+                                {/* Logout */}
+                                <button
+                                    onClick={handleLogout}
+                                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                                >
+                                    <LogOut size={20} />
+                                    <span>Logout</span>
                                 </button>
-                            )
-                        }
-                        <button>
-                            <Link
-                                to="/account"
-                                className="flex justify-center align-middle"
-                            >
-                                <img
-                                    className="mr-2 size-5 flexjustify-center"
-                                    src={profileSvg}
-                                    alt="hi"
-                                />
-                                Account
-                            </Link>
-
-
-                        </button>
+                            </>
+                        ) : (
+                            <div className="flex items-center space-x-4">
+                                <Link
+                                    to="/"
+                                    className="text-gray-600 hover:text-gray-800 px-4 py-2 rounded-lg transition-colors"
+                                >
+                                    Login
+                                </Link>
+                                <Link
+                                    to="/signup"
+                                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
+                                >
+                                    Sign Up
+                                </Link>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
-            <div className='mx-5 flex justify-center align-middle items-center gap-10'>
-                <div className='relative  '>
-                    <img
-                        src={Notification}
-                        className='size-6 cursor-pointer hover:animate-ring'
-                        alt="Notification Icon"
-                        onClick={toggleNotifications}
-                    />
-                    <span className="absolute -top-1 left-4 text-sm bg-red-400 text-white rounded-full px-1 py-0.5">
-                        {notifications.length}
-                    </span>
-
-
-                    {showNotifications && (
-                        <div className="absolute  bg-white border rounded shadow-lg p-3 w-64">
-                            <h4 className="font-bold mb-2">Notifications</h4>
-                            {notifications.length > 0 ? (
-                                <ul>
-                                    {notifications.map((notif, index) => (
-                                        <li
-                                            key={index}
-                                            className={`mb-2 p-2 ${notif.isRead ? "bg-gray-200" : "bg-blue-100"
-                                                }`}
-                                            onClick={() => handleNotificationClick(notif, index)}
-                                        >
-                                            <p>
-                                                <strong>{notif.senderName}</strong>: wants to buy
-                                            </p>
-                                            <button 
-                                                className="mt-2 bg-blue-500 text-white px-2 py-1 rounded"
-                                                onClick={() => chatWithUser(notif.senderId)}
-                                            >
-                                                Chat
-                                            </button>
-                                        </li>
-                                    ))}
-
-                                </ul>
-                            ) : (
-                                <p>No new notifications</p>
-                            )}
-                        </div>
-                    )}
-                </div>
-                <button>
-                    <CartNumber />
-                    <Link
-                        to="/cart"
-                        className="flex justify-center align-middle gap-4"
-                    >
-                        <img
-                            width={30}
-                            height={30}
-                            src={Cart}
-                            alt="shopping-cart--v1"
-                        />
-                    </Link>
-                </button>
-                <button onClick={handleLogout} className="hover:text-red-500">
-                    Logout
-                </button>
-            </div>
         </nav>
     );
-}
+};
 
 export default Navbar;
