@@ -65,6 +65,7 @@ const setupSocket = (server) => {
             await addNewUser(userId, socket.id);
         });
 
+        
         socket.on(
             "sendNotification",
             async ({ senderName, receiverName, productName, senderId }) => {
