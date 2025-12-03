@@ -72,3 +72,42 @@
         display: none;
     }
 }
+
+/* Mirror effect for local video (like a selfie camera) */
+.mirror {
+    transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+}
+
+/* Smooth scrollbar styling */
+.scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #93c5fd;
+}
+
+/* Animation for call ringing */
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

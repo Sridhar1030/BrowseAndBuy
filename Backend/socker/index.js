@@ -32,6 +32,44 @@ const setupSocket = (server) => {
                 io.to(user.socketId).emit("recieve-message", data);
             }
         });
+
+        // Call events
+        socket.on("call-user", (data) => {
+            const { userToCall, signalData, from, name, callType } = data;
+            const user = activeUsers.find((user) => user.userId === userToCall);
+            if (user) {
+                io.to(user.socketId).emit("incoming-call", {
+                    signal: signalData,
+                    from,
+                    name,
+                    callType,
+                });
+            }
+        });
+
+        socket.on("answer-call", (data) => {
+            const { to, signal } = data;
+            const user = activeUsers.find((user) => user.userId === to);
+            if (user) {
+                io.to(user.socketId).emit("call-accepted", signal);
+            }
+        });
+
+        socket.on("reject-call", (data) => {
+            const { to } = data;
+            const user = activeUsers.find((user) => user.userId === to);
+            if (user) {
+                io.to(user.socketId).emit("call-rejected");
+            }
+        });
+
+        socket.on("end-call", (data) => {
+            const { to } = data;
+            const user = activeUsers.find((user) => user.userId === to);
+            if (user) {
+                io.to(user.socketId).emit("call-ended");
+            }
+        });
     });
 };
 
