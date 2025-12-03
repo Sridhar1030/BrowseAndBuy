@@ -11,6 +11,7 @@ const Cart = () => {
     console.log("user is ", user)
     const getUserCart  = useCartStore(state => state.getUserCart);
 
+    
     // Calculate total cost
     const totalCost = data.reduce((acc, item) => {
         const price = Number(item?.product?.price) || 0; // Ensure price is a valid number
